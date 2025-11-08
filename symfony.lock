@@ -278,6 +278,19 @@
             "./config/packages/messenger.yaml"
         ]
     },
+    "symfonycasts/sass-bundle": {
+        "version": "0.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "0.5",
+            "ref": "c891eb9a33f522440ec7dfc0dae3f63ce3a9ee87"
+        },
+        "files": [
+            "./config/packages/symfonycasts_sass.yaml",
+            "./assets/styles/app.scss"
+        ]
+    },
     "twig/extra-bundle": {
         "version": "v3.22.0"
     }

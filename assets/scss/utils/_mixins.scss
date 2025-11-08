@@ -9,7 +9,7 @@ $noise-steps: 10;
 @mixin randomNoise($name) {
   @keyframes #{$name} {
     @for $i from 0 through $noise-steps {
-      #{percentage($i/$noise-steps)} {
+      #{percentage(calc($i/$noise-steps))} {
         clip-path: inset(#{random(100) * 1%} 0 #{random(100) * 1%} 0);
       }
     }

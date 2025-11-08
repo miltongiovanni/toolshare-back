@@ -18,3 +18,7 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 .idea/*
+
+###> symfonycasts/sass-bundle ###
+/public/assets/
+###< symfonycasts/sass-bundle ###
