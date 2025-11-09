@@ -16,4 +16,8 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'auth' => [
+        'path' => './assets/auth.js',
+        'entrypoint' => true,
+    ],
 ];
