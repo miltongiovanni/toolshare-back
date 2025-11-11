@@ -127,7 +127,7 @@
                 <div class="single-item">
                     <div>
                         <div>
-                            <h3>Welcome to Multikart</h3>
+                            <h3>{{ 'auth.welcome'|trans }}</h3>
                             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                 Lorem Ipsum has been the industry's standard dummy.</p>
                         </div>
@@ -149,14 +149,14 @@
                             </div>
                         {% endif %}
 
-                        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+                        <h1 class="h3 mb-3 font-weight-normal">{{ 'auth.sign_in'|trans }}</h1>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" value="{{ last_username }}" id="username"  autocomplete="email" required autofocus placeholder="name@example.com">
-                            <label for="username">Email</label>
+                            <input type="email" class="form-control" value="{{ last_username }}" id="username" name="_username"  autocomplete="email" required autofocus placeholder="name@example.com">
+                            <label for="username">{{ 'auth.email'|trans }}</label>
                         </div>
                         <div class="form-floating">
-                            <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="current-password" required>
-                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="_password" placeholder="Password" autocomplete="current-password" required>
+                            <label for="password">{{ 'auth.password'|trans }}</label>
                         </div>
                         <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
                         {# Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -164,23 +164,29 @@
                         <div class="d-flex justify-content-between align-items-center my-3">
                             <div class="checkbox">
                                 <input type="checkbox" name="_remember_me" id="_remember_me">
-                                <label for="_remember_me">Remember me</label>
+                                <label for="_remember_me">{{ 'auth.remember_me'|trans }}</label>
                             </div>
                             <a href="javascript:void(0)"
-                               class="btn btn-default forgot-pass">Forgot Password!</a>
+                               class="btn btn-default forgot-pass">{{ 'auth.forgot_password'|trans }}</a>
                         </div>
-
+                        <div class="d-flex justify-content-between align-items-center my-3">
                         <button class="btn btn-lg btn-primary" type="submit">
-                            Login
+                            {{ 'auth.login'|trans }}
                         </button>
+                            <div class="mt-3 mb-3">
+                                <a href="{{ path('app_login', {_locale: 'en'}) }}" class="btn btn-default forgot-pass">EN</a> |
+                                <a href="{{ path('app_login', {_locale: 'fr'}) }}" class="btn btn-default forgot-pass">FR</a> |
+                                <a href="{{ path('app_login', {_locale: 'es'}) }}" class="btn btn-default forgot-pass">ES</a>
+                            </div>
+                        </div>
                         <div class="form-footer">
-                            <span>Or Login up with social platforms</span>
+                           {# <span>Or Login up with social platforms</span>
                             <ul class="social">
                                 <li><a class="ti-facebook" href=""></a></li>
                                 <li><a class="ti-twitter" href=""></a></li>
                                 <li><a class="ti-instagram" href=""></a></li>
                                 <li><a class="ti-pinterest" href=""></a></li>
-                            </ul>
+                            </ul>#}
                         </div>
                     </form>
                 </div>
