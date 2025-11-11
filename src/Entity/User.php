@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -37,6 +39,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $passcode = null;
+
+    #[ORM\Column]
+    private ?bool $is_verified = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Profile $profile = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $slug = null;
+
+    #[ORM\Column]
+    private ?bool $is_active = null;
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -141,4 +162,77 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getPasscode(): ?int
+    {
+        return $this->passcode;
+    }
+
+    public function setPasscode(?int $passcode): static
+    {
+        $this->passcode = $passcode;
+
+        return $this;
+    }
+
+    public function isVefified(): ?bool
+    {
+        return $this->is_verified;
+    }
+
+    public function setIsVefified(bool $is_verified): static
+    {
+        $this->is_verified = $is_verified;
+
+        return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfilee(?Profile $profile): static
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getSlug(): ?Uuid
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(Uuid $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    public function setIsActive(bool $is_active): static
+    {
+        $this->is_active = $is_active;
+
+        return $this;
+    }
+
 }
