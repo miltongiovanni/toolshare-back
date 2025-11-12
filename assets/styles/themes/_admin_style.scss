@@ -2192,7 +2192,7 @@ ul {
       height: calc(100vh - #{$header-size});
       overflow: auto;
       background-color: #202020;
-      background: url(../../images/dashboard/sidebarbg.jpg);
+      background: url(../images/dashboard/sidebarbg.jpg);
       background-repeat: no-repeat;
       background-size: cover;
     }
@@ -3675,7 +3675,7 @@ ul {
 
     .bg-primary {
       padding: 50px;
-      background-image: url("../../images/dashboard/login-bg.png");
+      background-image: url("../images/dashboard/login-bg.png");
       background-position: center;
       box-shadow: 1px 5px 24px 0 rgba(255, 128, 132, 0.8);
     }
