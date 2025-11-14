@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello HomeController!{% endblock %}
-
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 {% block javascripts %}
     {% block importmap %}{{ importmap('app') }}{% endblock %}
 {% endblock %}
