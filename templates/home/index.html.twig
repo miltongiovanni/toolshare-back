@@ -5,7 +5,7 @@
     {{ parent() }}
 {% endblock %}
 {% block javascripts %}
-    {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% block importmap %}{{ importmap(['app', 'sidebar-menu', 'custom-card', 'counter-custom', 'height-equal' ]) }}{% endblock %}
 {% endblock %}
 {% block content %}
     <div class="row">

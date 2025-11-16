@@ -20,6 +20,26 @@ return [
         'path' => './assets/auth.js',
         'entrypoint' => true,
     ],
+    'sidebar-menu' => [
+        'path' => './assets/js/sidebar-menu.js',
+        'entrypoint' => true,
+    ],
+    'custom-card' => [
+        'path' => './assets/js/custom-card/custom-card.js',
+        'entrypoint' => true,
+    ],
+    'counter-custom' => [
+        'path' => './assets/js/counter/counter-custom.js',
+        'entrypoint' => true,
+    ],
+    'height-equal' => [
+        'path' => './assets/js/height-equal.js',
+        'entrypoint' => true,
+    ],
+    'dashboard' => [
+        'path' => './assets/js/dashboard/default.js',
+        'entrypoint' => true,
+    ],
     'jquery' => [
         'version' => '3.7.1',
     ],
@@ -35,5 +55,8 @@ return [
     ],
     'feather-icons' => [
         'version' => '4.29.2',
+    ],
+    'clipboard' => [
+        'version' => '2.0.11',
     ],
 ];

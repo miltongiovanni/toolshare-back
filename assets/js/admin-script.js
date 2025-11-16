@@ -13,7 +13,7 @@
             $("body").removeClass("offcanvas");
         }
     });
-})(jQuery);
+})($);
 
 function toggleFullScreen() {
     if ((document.fullScreenElement && document.fullScreenElement !== null) ||
@@ -55,7 +55,7 @@ function toggleFullScreen() {
         function (e) {
             $(this).removeClass("is-active");
         });
-})(jQuery, window, document);
+})($, window, document);
 
 $(".chat-menu-icons .toogle-bar").click(function () {
     $(".chat-menu").toggleClass("show");
@@ -67,7 +67,7 @@ $(".chat-menu-icons .toogle-bar").click(function () {
  ==========================*/
 $(".bg-img").parent().addClass('bg-size');
 
-jQuery('.bg-img').each(function () {
+$('.bg-img').each(function () {
 
     var el = $(this),
         src = el.attr('src'),

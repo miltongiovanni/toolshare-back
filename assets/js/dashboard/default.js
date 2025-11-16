@@ -330,4 +330,4 @@ var sparkline_chart = {
 (function ($) {
     "use strict";
     sparkline_chart.init()
-})(jQuery);
+})($);

@@ -1,3 +1,4 @@
+import ClipboardJS from 'clipboard';
 var customcard = {
     init: function () {
         $(".card-header-right .close-card").on('click', function () {
@@ -84,4 +85,4 @@ var customcard = {
 (function ($) {
     "use strict";
     customcard.init()
-})(jQuery);
+})($);

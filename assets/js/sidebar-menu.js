@@ -26,9 +26,9 @@ $.sidebarMenu = function (menu) {
   });
 }
 $.sidebarMenu($('.sidebar-menu'))
-$nav = $('.page-sidebar');
-$header = $('.page-main-header');
-$toggle_nav_top = $('#sidebar-toggle');
+let $nav = $('.page-sidebar');
+let $header = $('.page-main-header');
+let $toggle_nav_top = $('#sidebar-toggle');
 $toggle_nav_top.click(function () {
   $this = $(this);
   $nav = $('.page-sidebar');
@@ -36,7 +36,7 @@ $toggle_nav_top.click(function () {
   $header.toggleClass('open');
 
 });
-$body_part_side = $('.body-part');
+let $body_part_side = $('.body-part');
 $body_part_side.click(function () {
   $nav.addClass('open');
   $header.addClass('open');
@@ -55,7 +55,7 @@ var widthwindow = $window.width();
     $toggle_nav_top.addClass("open");
     $nav.addClass("open");
   }
-})(jQuery);
+})($);
 $(window).resize(function () {
   var widthwindaw = $window.width();
   if (widthwindaw + 17 <= 991) {

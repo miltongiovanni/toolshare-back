@@ -65,6 +65,6 @@ var ecommerce_product = {
         });
     }
 };
-jQuery(document).ready(function() {
+$(document).ready(function() {
     ecommerce_product.init();
 });
