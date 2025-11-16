@@ -34,22 +34,6 @@
                         <i data-feather="maximize-2"></i>
                     </a>
                 </li>
-                <li class="nav-item onhover-dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ app.locale == 'en' ? 'EN' : (app.locale == 'fr' ? 'FR' : 'ES') }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% if app.locale != 'en' %}
-                            <li><a class="dropdown-item" href="{{ path(app.current_route, {_locale: 'en' }) }}">English</a></li>
-                        {% endif %}
-                        {% if app.locale != 'fr' %}
-                            <li><a class="dropdown-item" href="{{ path(app.current_route, {_locale: 'fr' }) }}">Français</a></li>
-                        {% endif %}
-                        {% if app.locale != 'es' %}
-                            <li><a class="dropdown-item" href="{{ path(app.current_route, {_locale: 'es' }) }}">Español</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
                 <li class="onhover-dropdown">
                     <a class="txt-dark" href="{{ path(app.current_route, {_locale: app.locale}) }}">
                         <h6>{{ app.locale == 'en' ? 'EN' : (app.locale == 'fr' ? 'FR' : 'ES') }}</h6>
@@ -67,7 +51,7 @@
                         {% endif %}
                         {% if app.locale != 'es' %}
                             <li>
-                                <a href="{{ path(app.current_route, {_locale: 'es' }) }})" data-lng="es">Español</a>
+                                <a href="{{ path(app.current_route, {_locale: 'es' }) }}" data-lng="es">Español</a>
                             </li>
                         {% endif %}
                     </ul>
