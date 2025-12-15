@@ -2,20 +2,18 @@
 
 {% block title %}Profile index{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Profile index</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Code</th>
-                <th>Created_at</th>
+                <th>{{ 'table.role'|trans }}</th>
                 <th>Slug</th>
-                <th>Description_en</th>
-                <th>Description_fr</th>
-                <th>Description_es</th>
-                <th>actions</th>
+                <th>{{ 'table.description'|trans }}</th>
+                <th>{{ 'table.createdAt'|trans }}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,14 +21,19 @@
             <tr>
                 <td>{{ profile.id }}</td>
                 <td>{{ profile.code }}</td>
-                <td>{{ profile.createdAt ? profile.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ profile.slug }}</td>
-                <td>{{ profile.descriptionEn }}</td>
-                <td>{{ profile.descriptionFr }}</td>
-                <td>{{ profile.descriptionEs }}</td>
+                <td>{{ profile.description }}</td>
+                <td>{{ profile.created_at ? profile.created_at|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_profile_show', {'id': profile.id}) }}">show</a>
-                    <a href="{{ path('app_profile_edit', {'id': profile.id}) }}">edit</a>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('app_profile_show', {'id': profile.id}) }}">show</a>
+                            <a class="dropdown-item" href="{{ path('app_profile_edit', {'id': profile.id}) }}">edit</a>
+                        </ul>
+                    </div>
                 </td>
             </tr>
         {% else %}

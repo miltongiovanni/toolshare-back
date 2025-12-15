@@ -9,6 +9,12 @@ return [
     'auth.forgot_password' => 'Forgot password',
     'auth.login' => 'Login',
 
+    //TABLE HEADERS
+    'table.role' => 'Role',
+    'table.description' => 'Description',
+    'table.createdAt' => 'Created at',
+    'table.updatedAt' => 'Updated at',
+
     //MENU
     'menu.dashboard' => 'Dashboard',
     'menu.settings' => 'Settings',

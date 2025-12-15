@@ -11,18 +11,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/profile')]
 final class ProfileController extends AbstractController
 {
-    #[Route(name: 'app_profile_index', methods: ['GET'])]
-    public function index(ProfilRepository $profilRepository): Response
+    #[Route(
+        path: [
+            'en' => '/en/profile',
+            'fr' => '/fr/profil',
+            'es' => '/es/perfil'
+        ],name: 'app_profile_index', methods: ['GET'])]
+    public function index(Request $request, ProfilRepository $profilRepository): Response
     {
+        $locale = $request->getLocale();
+        $profiles = $profilRepository->getAllProfiles($locale);
         return $this->render('profile/index.html.twig', [
-            'profiles' => $profilRepository->findAll(),
+            'profiles' => $profiles,
         ]);
     }
 
-    #[Route('/new', name: 'app_profile_new', methods: ['GET', 'POST'])]
+    #[Route(
+        path: [
+            'en' => '/en/profile/new',
+            'fr' => '/fr/profil/noveau',
+            'es' => '/es/perfil/nuevo'
+        ], name: 'app_profile_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $profile = new Profile();
@@ -42,15 +53,20 @@ final class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_profile_show', methods: ['GET'])]
-    public function show(Profile $profile): Response
-    {
-        return $this->render('profile/show.html.twig', [
-            'profile' => $profile,
-        ]);
-    }
+//    #[Route('/{id}', name: 'app_profile_show', methods: ['GET'])]
+//    public function show(Profile $profile): Response
+//    {
+//        return $this->render('profile/show.html.twig', [
+//            'profile' => $profile,
+//        ]);
+//    }
 
-    #[Route('/{id}/edit', name: 'app_profile_edit', methods: ['GET', 'POST'])]
+    #[Route(
+        path: [
+            'en' => '/en/profile/{id}/edit',
+            'fr' => '/fr/profil/{id}/editer',
+            'es' => '/es/perfil/{id}/ediction'
+        ], name: 'app_profile_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Profile $profile, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProfileType::class, $profile);
@@ -68,7 +84,12 @@ final class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_profile_delete', methods: ['POST'])]
+    #[Route(
+        path: [
+            'en' => '/en/profile/{id}/delete',
+            'fr' => '/fr/profil/{id}/supprimer',
+            'es' => '/es/perfil/{id}/suprimir'
+        ], name: 'app_profile_delete', methods: ['POST'])]
     public function delete(Request $request, Profile $profile, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$profile->getId(), $request->getPayload()->getString('_token'))) {

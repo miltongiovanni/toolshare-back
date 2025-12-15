@@ -22,7 +22,13 @@ class Profile
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private ?string $slug_en = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug_fr = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $slug_es = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description_en = null;
@@ -80,14 +86,38 @@ class Profile
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlugEn(): ?string
     {
-        return $this->slug;
+        return $this->slug_en;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlugEn(string $slug): static
     {
-        $this->slug = $slug;
+        $this->slug_en = $slug;
+
+        return $this;
+    }
+
+    public function getSlugFr(): ?string
+    {
+        return $this->slug_fr;
+    }
+
+    public function setSlugFr(string $slug): static
+    {
+        $this->slug_fr = $slug;
+
+        return $this;
+    }
+
+    public function getSlugEs(): ?string
+    {
+        return $this->slug_es;
+    }
+
+    public function setSlugEs(string $slug): static
+    {
+        $this->slug_es = $slug;
 
         return $this;
     }

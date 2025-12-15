@@ -9,6 +9,12 @@ return [
     'auth.forgot_password' => 'Olvidé mi contraseña',
     'auth.login' => 'Inicio de sesión',
 
+    //TABLE HEADERS
+    'table.role' => 'Rol',
+    'table.description' => 'Descripción',
+    'table.createdAt' => 'Creado en',
+    'table.updatedAt' => 'Actualizado en',
+
     //MENU
     'menu.dashboard' => 'Dashboard',
     'menu.settings' => 'Configuraciones',

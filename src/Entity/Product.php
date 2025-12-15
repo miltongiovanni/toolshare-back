@@ -18,26 +18,25 @@ class Product implements TranslatableInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ProductSubcategory $product_subcategory = null;
+
     #[ORM\Column]
-    private ?float $price = null;
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column]
+    private ?bool $enabled = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(float $price): self
-    {
-        $this->price = $price;
-        return $this;
-    }
-
-    // Métodos traducibles
+    // Translatable methods
     public function getName(): ?string
     {
         return $this->translate(null, false)->getName();
@@ -57,6 +56,54 @@ class Product implements TranslatableInterface
     public function setDescription(string $description): self
     {
         $this->translate(null, false)->setDescription($description);
+        return $this;
+    }
+
+    public function getProductSubcategory(): ?ProductSubcategory
+    {
+        return $this->product_subcategory;
+    }
+
+    public function setProductSubcategory(?ProductSubcategory $product_subcategory): static
+    {
+        $this->product_subcategory = $product_subcategory;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function isEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): static
+    {
+        $this->enabled = $enabled;
+
         return $this;
     }
 }

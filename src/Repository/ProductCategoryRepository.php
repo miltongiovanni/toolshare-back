@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Profile;
+use App\Entity\ProductCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Profile>
+ * @extends ServiceEntityRepository<ProductCategory>
  */
-class ProfilRepository extends ServiceEntityRepository
+class ProductCategoryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Profile::class);
+        parent::__construct($registry, ProductCategory::class);
     }
 
     //    /**
-    //     * @return Profil[] Returns an array of Profil objects
+    //     * @return ProductCategory[] Returns an array of ProductCategory objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,13 +31,13 @@ class ProfilRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-        public function getAllProfiles($locale): array
-        {
-            $qb = $this->createQueryBuilder('p');
-            $qb->select(['p.id', 'p.code', 'p.slug_'.$locale.' AS slug', 'p.description_'.$locale.' AS description', 'p.created_at']);
-            return $qb
-                ->getQuery()
-                ->getResult()
-            ;
-        }
+    //    public function findOneBySomeField($value): ?ProductCategory
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
