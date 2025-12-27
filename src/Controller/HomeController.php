@@ -2,20 +2,29 @@
 
 namespace App\Controller;
 
+use App\Service\BreadcrumbService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class HomeController extends AbstractController
 {
+    private $breadcrumbService;
+    public function __construct(BreadcrumbService $breadcrumbService, TranslatorInterface $translator)
+    {
+        $this->breadcrumbService = $breadcrumbService;
+        $this->translator = $translator;
+    }
+
 
     #[Route(
         path: '/',
-        name: 'app_home2'
+        name: 'home2'
     )]
     public function index2(): Response
     {
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('home');
     }
     #[Route(
         path: [
@@ -23,12 +32,16 @@ final class HomeController extends AbstractController
             'fr' => '/fr/',
             'es' => '/es/'
         ],
-        name: 'app_home'
+        name: 'home'
     )]
     public function index(): Response
     {
+        $page_title = $this->translator->trans('menu.dashboard');
+        $this->breadcrumbService->add($this->translator->trans('menu.dashboard'), $this->generateUrl('home'));
+        $breadcrumbs = $this->breadcrumbService->all();
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'page_title' => $page_title,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 }

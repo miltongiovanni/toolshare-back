@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Profile index{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block javascripts %}
+    {% block importmap %}{{ importmap(['app', 'sidebar-menu' ]) }}{% endblock %}
+{% endblock %}
 
 {% block content %}
-    <h1>Profile index</h1>
 
     <table class="table">
         <thead>
@@ -30,8 +35,8 @@
                             Action
                         </button>
                         <ul class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ path('app_profile_show', {'id': profile.id}) }}">show</a>
-                            <a class="dropdown-item" href="{{ path('app_profile_edit', {'id': profile.id}) }}">edit</a>
+                            {#<a class="dropdown-item" href="{{ path('profile_show', {'id': profile.id}) }}">show</a>#}
+                            <a class="dropdown-item" href="{{ path('profile_edit', {'id': profile.id}) }}">edit</a>
                         </ul>
                     </div>
                 </td>
@@ -44,5 +49,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_profile_new') }}">Create new</a>
+    <a href="{{ path('profile_new') }}">Create new</a>
 {% endblock %}

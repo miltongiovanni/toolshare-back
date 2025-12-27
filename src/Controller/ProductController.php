@@ -4,17 +4,32 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductRepository;
+use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[Route('/product')]
 final class ProductController extends AbstractController
 {
-    #[Route(name: 'app_product_index', methods: ['GET'])]
+    private $breadcrumbService;
+    private $translator;
+    public function __construct(BreadcrumbService $breadcrumbService, TranslatorInterface $translator)
+    {
+        $this->breadcrumbService = $breadcrumbService;
+        $this->translator = $translator;
+    }
+
+    #[Route(
+        path: [
+            'en' => '/en/product/',
+            'fr' => '/fr/produit/',
+            'es' => '/es/producto/'
+        ], name: 'product_index', methods: ['GET'])]
     public function index(ProductRepository $productRepository): Response
     {
         return $this->render('product/index.html.twig', [
@@ -22,7 +37,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[Route('/product/new', name: 'product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
@@ -33,7 +48,7 @@ final class ProductController extends AbstractController
             $entityManager->persist($product);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('product/new.html.twig', [
@@ -42,7 +57,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
+    #[Route('/product/{id}', name: 'product_show', methods: ['GET'])]
     public function show(Product $product): Response
     {
         return $this->render('product/show.html.twig', [
@@ -50,7 +65,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[Route('/product/{id}/edit', name: 'product_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProductType::class, $product);
@@ -59,7 +74,7 @@ final class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('product/edit.html.twig', [
@@ -68,7 +83,7 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
+    #[Route('/product/delete/{id}', name: 'product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
@@ -76,6 +91,146 @@ final class ProductController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route(
+        path: [
+            'en' => '/en/product/category/',
+            'fr' => '/fr/produit/categorie/',
+            'es' => '/es/producto/categoria/'
+        ], name: 'category_product_index', methods: ['GET'])]
+    public function category_product_index(ProductCategoryRepository $productCategoryRepository): Response
+    {
+        $page_title = $this->translator->trans('menu.products'). ' - '.$this->translator->trans('menu.products.category');
+        $this->breadcrumbService->add($this->translator->trans('menu.dashboard'), $this->generateUrl('home'));
+        $this->breadcrumbService->add($this->translator->trans('menu.products'), $this->generateUrl('product_index'));
+        $this->breadcrumbService->add($this->translator->trans('menu.products.category'), $this->generateUrl('category_product_index'));
+        $breadcrumbs = $this->breadcrumbService->all();
+        return $this->render('product/category/index.html.twig', [
+            'product_categories' => $productCategoryRepository->findAll(),
+            'breadcrumbs' => $breadcrumbs,
+            'page_title' => $page_title,
+        ]);
+    }
+
+    #[Route('/product/category/new', name: 'product_category_new', methods: ['GET', 'POST'])]
+    public function product_category_new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_category_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('product/category/new.html.twig', [
+            'product' => $product,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/product/category/{id}', name: 'product_category_show', methods: ['GET'])]
+    public function product_category_show(Product $product): Response
+    {
+        return $this->render('product/category/show.html.twig', [
+            'product' => $product,
+        ]);
+    }
+
+    #[Route('/product/category/{id}/edit', name: 'product_category_edit', methods: ['GET', 'POST'])]
+    public function product_category_edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('product/category/edit.html.twig', [
+            'product' => $product,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/product/category/delete/{id}', name: 'product_category_delete', methods: ['POST'])]
+    public function product_category_delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($product);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/product/subcategory/',name: 'product_subcategory_index', methods: ['GET'])]
+    public function product_subcategory_index(ProductRepository $productRepository): Response
+    {
+        return $this->render('product/subcategory/index.html.twig', [
+            'products' => $productRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/product/new', name: 'product_subcategory_new', methods: ['GET', 'POST'])]
+    public function product_subcategory_new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($product);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('product/subcategory/new.html.twig', [
+            'product' => $product,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/product/{id}', name: 'product_subcategory_show', methods: ['GET'])]
+    public function product_subcategory_show(Product $product): Response
+    {
+        return $this->render('product/subcategory/show.html.twig', [
+            'product' => $product,
+        ]);
+    }
+
+    #[Route('/product/{id}/edit', name: 'product_subcategory_edit', methods: ['GET', 'POST'])]
+    public function product_subcategory_edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('product/subcategory/edit.html.twig', [
+            'product' => $product,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/product/{id}', name: 'product_subcategory_delete', methods: ['POST'])]
+    public function product_subcategory_delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($product);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
     }
 }

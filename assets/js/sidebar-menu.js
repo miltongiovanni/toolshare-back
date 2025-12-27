@@ -30,7 +30,7 @@ let $nav = $('.page-sidebar');
 let $header = $('.page-main-header');
 let $toggle_nav_top = $('#sidebar-toggle');
 $toggle_nav_top.click(function () {
-  $this = $(this);
+  let $this = $(this);
   $nav = $('.page-sidebar');
   $nav.toggleClass('open');
   $header.toggleClass('open');

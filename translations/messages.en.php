@@ -9,6 +9,9 @@ return [
     'auth.forgot_password' => 'Forgot password',
     'auth.login' => 'Login',
 
+    //GLOBAL
+    'site.name' => 'Toolshare Admin panel',
+
     //TABLE HEADERS
     'table.role' => 'Role',
     'table.description' => 'Description',

@@ -12,7 +12,7 @@
                                                                                aria-hidden="true"></i></a>
         <ul class="sidebar-menu">
             <li>
-                <a class="sidebar-header" href="{{ path('app_home') }}">
+                <a class="sidebar-header" href="{{ path('home') }}">
                     <i data-feather="home"></i>
                     <span>{{ 'menu.dashboard'| trans }}</span>
                 </a>
@@ -24,7 +24,7 @@
                             class="fa fa-angle-right pull-right"></i></a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ path('app_profile_index') }}"><i class="fa fa-circle"></i>{{ 'menu.profile'|trans }}
+                        <a href="{{ path('profile_index') }}"><i class="fa fa-circle"></i>{{ 'menu.profile'|trans }}
                         </a>
                     </li>
                 </ul>
@@ -39,7 +39,7 @@
 
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="category.html">
+                        <a href="{{ path('category_product_index') }}">
                             <i class="fa fa-circle"></i>{{ 'menu.products.category'|trans }}
                         </a>
                     </li>

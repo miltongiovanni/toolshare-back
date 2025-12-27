@@ -2,7 +2,7 @@
 
 {% block title %}Product index{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Product index</h1>
 
     <table class="table">
@@ -16,15 +16,15 @@
             </tr>
         </thead>
         <tbody>
-        {% for product in products %}
+        {% for category in product_categories %}
             <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.createdAt ? product.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ product.updatedAt ? product.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ product.enabled ? 'Yes' : 'No' }}</td>
+                <td>{{ category.id }}</td>
+                <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ category.enabled ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
+                    <a href="{{ path('product_show', {'id': category.id}) }}">show</a>
+                    <a href="{{ path('product_edit', {'id': category.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

@@ -9,6 +9,9 @@ return [
     'auth.forgot_password' => 'Olvidé mi contraseña',
     'auth.login' => 'Inicio de sesión',
 
+    //GLOBAL
+    'site.name' => 'Panel de administración de Toolshare',
+
     //TABLE HEADERS
     'table.role' => 'Rol',
     'table.description' => 'Descripción',
@@ -24,5 +27,5 @@ return [
     'menu.products.list' => 'Lista de productos',
     'menu.orders' => 'Órdenes',
     'menu.users' => 'Usuarios',
-    'menu.profile' => 'Usuarios',
+    'menu.profile' => 'Perfil',
 ];
