@@ -22,7 +22,7 @@ window.jQuery = $;
 import 'bootstrap';
 import featherIcons from "feather-icons";
 featherIcons.replace();
-
+import "bootstrap-icons/font/bootstrap-icons.min.css"
 
 (function ($) {
     "use strict";

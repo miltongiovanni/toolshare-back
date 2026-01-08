@@ -40,6 +40,10 @@ return [
         'path' => './assets/js/dashboard/default.js',
         'entrypoint' => true,
     ],
+    'category' => [
+        'path' => './assets/js/pages/category.js',
+        'entrypoint' => true,
+    ],
     'jquery' => [
         'version' => '3.7.1',
     ],
@@ -58,5 +62,90 @@ return [
     ],
     'clipboard' => [
         'version' => '2.0.11',
+    ],
+    'dropzone' => [
+        'version' => '6.0.0-beta.2',
+    ],
+    'just-extend' => [
+        'version' => '5.1.1',
+    ],
+    'cropperjs' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/utils' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/elements' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-canvas' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-image' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-shade' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-handle' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-selection' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-grid' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-crosshair' => [
+        'version' => '2.1.0',
+    ],
+    '@cropper/element-viewer' => [
+        'version' => '2.1.0',
+    ],
+    'jszip' => [
+        'version' => '3.10.1',
+    ],
+    'datatables.net-bs5' => [
+        'version' => '2.3.5',
+    ],
+    'datatables.net' => [
+        'version' => '2.3.5',
+    ],
+    'datatables.net-bs5/css/dataTables.bootstrap5.min.css' => [
+        'version' => '2.3.5',
+        'type' => 'css',
+    ],
+    'datatables.net-buttons-bs5' => [
+        'version' => '3.2.6',
+    ],
+    'datatables.net-buttons' => [
+        'version' => '3.2.6',
+    ],
+    'datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css' => [
+        'version' => '3.2.6',
+        'type' => 'css',
+    ],
+    'datatables.net-plugins/i18n/fr-FR.mjs' => [
+        'version' => '2.3.6',
+    ],
+    'datatables.net-plugins/i18n/es-CO.mjs' => [
+        'version' => '2.3.6',
+    ],
+    'datatables.net-plugins/i18n/en-GB.mjs' => [
+        'version' => '2.3.6',
+    ],
+    'dropzone/dist/dropzone.css' => [
+        'version' => '6.0.0-beta.2',
+        'type' => 'css',
+    ],
+    'luxon' => [
+        'version' => '3.7.2',
+    ],
+    'bootstrap-icons/font/bootstrap-icons.min.css' => [
+        'version' => '1.13.1',
+        'type' => 'css',
     ],
 ];

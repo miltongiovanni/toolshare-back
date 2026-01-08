@@ -12559,7 +12559,7 @@ ul.notification-dropdown.onhover-show-div li + li:hover {
     }
 
     .needs-validation textarea {
-        margin: 0 15px;
+        margin: 0 0;
     }
 
     .dataTables_wrapper .dataTables_paginate {
@@ -14521,3 +14521,14 @@ body.rtl .table-category tbody tr td:first-child {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.dz-size {
+    display: none !important;
+}
+.dz-filename {
+    display: none;
+}
+.dz-preview  {
+    display: none !important;
+}
+

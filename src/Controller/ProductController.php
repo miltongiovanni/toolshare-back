@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\ProductCategory;
 use App\Form\ProductType;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductRepository;
 use App\Service\BreadcrumbService;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -113,24 +116,23 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/product/category/new', name: 'product_category_new', methods: ['GET', 'POST'])]
-    public function product_category_new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/product/category/list', name: 'product_category_list', methods: [ 'POST'])]
+    public function product_category_list(ProductCategoryRepository $productCategoryRepositoryRequest): JsonResponse
     {
-        $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
+        $productsCategories = $productCategoryRepositoryRequest->findAll();
+        //To array
+        $productsCategoriesArray = array_map(function ($productCategory) {
+            /** @var ProductCategory $productCategory */
+            return $productCategory->toArray();
+        }, $productsCategories);
+        $return = [
+            'draw' => 0,
+            'recordsTotal' => count($productsCategoriesArray),
+            'recordsFiltered' => count($productsCategoriesArray),
+            'data' => $productsCategoriesArray
+        ];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($product);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('product_category_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('product/category/new.html.twig', [
-            'product' => $product,
-            'form' => $form,
-        ]);
+        return $this->json($return);
     }
 
     #[Route('/product/category/{id}', name: 'product_category_show', methods: ['GET'])]
@@ -157,6 +159,41 @@ final class ProductController extends AbstractController
             'product' => $product,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/product/category/{id}/update', name: 'product_category_update', methods: [ 'POST'])]
+    public function product_category_update(Request $request, string $id, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): Response
+    {
+        $category_id = $request->request->get('category_id');
+        $image = $request->request->get('image');
+        $name_en = $request->request->get('name_en');
+        $description_en = $request->request->get('description_en');
+        $name_fr = $request->request->get('name_fr');
+        $description_fr = $request->request->get('description_fr');
+        $name_es = $request->request->get('name_es');
+        $description_es = $request->request->get('description_es');
+        $enabled = $request->request->get('enabled', false);
+        if ($category_id === '0'){
+            $productCategory = new ProductCategory();
+            $productCategory->setCreatedAt(Carbon::now()->toDateTimeImmutable());
+        }else{
+            $productCategory = $productCategoryRepository->find($id);
+            $productCategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
+        }
+        $productCategory->translate('en')->setName($name_en);
+        $productCategory->translate('fr')->setName($name_fr);
+        $productCategory->translate('es')->setName($name_es);
+        $productCategory->translate('en')->setDescription($description_en);
+        $productCategory->translate('fr')->setDescription($description_fr);
+        $productCategory->translate('es')->setDescription($description_es);
+        $productCategory->setEnabled($enabled);
+        $productCategory->setImage($image);
+        $productCategory->mergeNewTranslations();
+        $em->persist($productCategory);
+        $em->flush();
+        dd($request->request->all(), $productCategory, $id, $category_id);
+
+
     }
 
     #[Route('/product/category/delete/{id}', name: 'product_category_delete', methods: ['POST'])]

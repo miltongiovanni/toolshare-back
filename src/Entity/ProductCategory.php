@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductCategoryRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,6 +34,9 @@ class ProductCategory implements TranslatableInterface
 
     #[ORM\Column]
     private ?bool $enabled = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
 
     public function __construct()
     {
@@ -131,4 +135,30 @@ class ProductCategory implements TranslatableInterface
         $this->translate(null, false)->setDescription($description);
         return $this;
     }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'image' => $this->getImage(),
+            'created_at' => Carbon::parse($this->getCreatedAt())->toISOString(),
+            'updated_at' => $this->getUpdatedAt() != null ? Carbon::parse($this->getUpdatedAt())->toISOString() : Carbon::parse($this->getCreatedAt())->toISOString(),
+            'enabled' => $this->isEnabled(),
+            ];
+
+    }
+
 }

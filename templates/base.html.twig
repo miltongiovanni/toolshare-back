@@ -14,9 +14,13 @@
     {% endblock %}
 
     {% block javascripts %}
+        <script>
+            var locale = '{{ app.locale }}';
+            var app_url = '{{ APP_URL }}';
+        </script>
 
 
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% block importmap %}{% endblock %}
     {% endblock %}
 </head>
 <body>
@@ -48,7 +52,7 @@
         <!-- footer end-->
     </div>
 </div>
-
+{% block modal %}{% endblock %}
 <div class="bottom-space"></div>
 </body>
 </html>
