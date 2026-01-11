@@ -10,8 +10,8 @@ import Dropzone from "dropzone";
 // Optionally, import the dropzone file to get default styling.
 import "dropzone/dist/dropzone.css";
 import {DateTime} from "luxon";
-
-
+import { Modal } from 'bootstrap';
+const productCategoryModal = new Modal(document.getElementById('productCategoryModal'));
 let language = locale === 'en' ? languageEn : (locale === 'fr' ? languageFr : languageEs);
 
 let categoriesDataTable = new DataTable("#categoriesDataTable", {
@@ -61,17 +61,18 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
             data: 'null',
             width: '10%',
             render: function (data, type, row) {
+                let actionTitle = row.enabled ? t('disable') : t('enable');
+                let actionClass = row.enabled ? 'category-enabled' : 'category-disabled';
                 return '<div class="dropdown">\n' +
-                    '    <a class="btn btn-primary dropdown-toggle w-100" href="#" role="button" id="dropdownMenuLink"\n' +
-                    '       data-bs-toggle="dropdown" aria-expanded="false">\n' +
-                    '        Acciones\n' +
-                    '    </a>\n' +
+                    '    <button type="button" class="btn btn-primary dropdown-toggle w-100" role="button" id="dropdownMenuLink"\n' +
+                    '       data-bs-toggle="dropdown" aria-expanded="false">\n' + t('actions') +
+                    '    </button>\n' +
                     '    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n' +
-                    '            <li>\n' +
-                    (row.estado ? '<a class="dropdown-item" href="/cliente/' + row.slug + '/desactivar/">Desactivar</a>' : '<a class="dropdown-item" href="/cliente/' + row.slug + '/activar/">Activar</a>') +
-                    '            </li>\n' +
-                    '        <li>\n' +
-                    '            <a class="dropdown-item" href="/cliente/' + row.slug + '/editar/">Editar</a>\n' +
+                    '        <li class="w-100">\n' +
+                    '            <button data-category-id="'+ row.id +'"  type="button" class="dropdown-item '+ actionClass+ '" >'+ actionTitle + '</button>\n' +
+                    '        </li>\n' +
+                    '        <li class="w-100">\n' +
+                    '            <button data-category-id="'+ row.id +'"  type="button" class="dropdown-item category-edit" >' + t('edit') +'</button>\n' +
                     '        </li>\n' +
                     '    </ul>\n' +
                     '</div>'
@@ -91,30 +92,6 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
         ],
     language: language,
 });
-
-
-// $("div#image_upload").dropzone({
-//     url: "/uploadImage",
-//     maxFiles: 1,
-//     dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
-//     acceptedFiles: 'image/*',
-//     createImageThumbnails: true,
-//     thumbnailMethod: 'contain',
-//     maxFilesize: 3,  // in Mb
-//     init: function () {
-//         console.log('init');
-//         this.on("success", function (file, response) {
-//             console.log(response);
-//             let imgUrl = $('#image_upload').data('base-url') + 'uploads/images/' + response.location;
-//             //$('div.dz-success').remove();
-//             $('#img-product').attr('src', imgUrl);
-//             this.removeFile(file);
-//             $('#dropzoneTitle').hide();
-//             $('#img-preview').show();
-//             $('#image').val(response.location);
-//         });
-//     }
-// });
 
 let myDropzone = new Dropzone("div#image_upload",
     {
@@ -147,6 +124,7 @@ let myDropzone = new Dropzone("div#image_upload",
         },
     });
 $(document).on('click', '#add_category_button', function () {
+    $('#productCategoryModalLabel').html(t('product.category.add'));
     $('#category_id').val(0)
 });
 
@@ -172,21 +150,21 @@ $(document).on('click', '#submit_category', function () {
     let form = document.getElementById('category_form');
     form.classList.add('was-validated');
     if (form.checkValidity()) {
-        let category_id = $('#category_id').val();
-        let url = '/product/category/' + category_id + '/update';
+        let url = '/product/category/update';
         // Create a FormData object from the form
         var formData = new FormData(form);
-        console.log('form is valid');
         $.ajax({
             url: url, // Use the form's action attribute
             type: 'post', // Use the form's method attribute
             data: formData,
             processData: false, // Prevents jQuery from transforming the data into a query string
             contentType: false, // Prevents jQuery from setting the Content-Type header
+            dataType: "json",
             success: function (response) {
                 // Handle a successful response from the server
                 $('#response-message').html('Success: ' + JSON.stringify(response));
-                console.log(response);
+                categoriesDataTable.ajax.reload();
+                productCategoryModal.hide();
             },
             error: function (xhr, status, error) {
                 // Handle errors
@@ -195,4 +173,90 @@ $(document).on('click', '#submit_category', function () {
             }
         });
     }
+});
+
+$(document).on('click', '#add_category_button', function () {
+    $('#productCategoryModalLabel').html(t('product.category.add'));
+    $('#category_id').val(0)
+});
+$(document).on('click', '.category-enabled', function () {
+    let category_id = $(this).data('categoryId');
+    $.ajax({
+        url: '/product/category/disable', // Use the form's action attribute
+        type: 'post', // Use the form's method attribute
+        data: {
+            category_id: category_id,
+        },
+        dataType: "json",
+        success: function (response) {
+            // Handle a successful response from the server
+            $('#response-message').html('Success: ' + JSON.stringify(response));
+            categoriesDataTable.ajax.reload();
+            productCategoryModal.hide();
+        },
+        error: function (xhr, status, error) {
+            // Handle errors
+            $('#response-message').html('Error: ' + error);
+            console.error(xhr.responseText);
+        }
+    });
+});
+
+
+$(document).on('click', '.category-disabled', function () {
+    let category_id = $(this).data('categoryId');
+    $.ajax({
+        url: '/product/category/enable', // Use the form's action attribute
+        type: 'post', // Use the form's method attribute
+        data: {
+            category_id: category_id,
+        },
+        dataType: "json",
+        success: function (response) {
+            // Handle a successful response from the server
+            $('#response-message').html('Success: ' + JSON.stringify(response));
+            categoriesDataTable.ajax.reload();
+            productCategoryModal.hide();
+        },
+        error: function (xhr, status, error) {
+            // Handle errors
+            $('#response-message').html('Error: ' + error);
+            console.error(xhr.responseText);
+        }
+    });
+});
+$(document).on('click', '.category-edit', function () {
+    let category_id = $(this).data('categoryId');
+    $.ajax({
+        url: '/product/category/get', // Use the form's action attribute
+        type: 'post', // Use the form's method attribute
+        data: {
+            category_id: category_id,
+        },
+        dataType: "json",
+        success: function (response) {
+            // Handle a successful response from the server
+            $('#enabled').prop('checked', response.enabled);
+            $('#image').val(response.image);
+            let imgUrl = app_url + 'uploads/images/' + response.image;
+            $('#img-product').attr('src', imgUrl).removeClass('d-none');
+            $('#dropzoneTitle').hide();
+            $('#name_en').val(response.name_en);
+            $('#name_fr').val(response.name_fr);
+            $('#name_es').val(response.name_es);
+            $('#description_en').val(response.description_en);
+            $('#description_fr').val(response.description_fr);
+            $('#description_es').val(response.description_es);
+
+            console.log(response);
+            $('#productCategoryModalLabel').html(t('product.category.edit'));
+            $('#category_id').val(category_id);
+            productCategoryModal.show();
+        },
+        error: function (xhr, status, error) {
+            // Handle errors
+            $('#response-message').html('Error: ' + error);
+            console.error(xhr.responseText);
+        }
+    });
 });

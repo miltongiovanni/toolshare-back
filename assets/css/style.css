@@ -14532,3 +14532,15 @@ body.rtl .table-category tbody tr td:first-child {
     display: none !important;
 }
 
+.page-link:focus {
+    background-color: var(--theme-color);
+}
+
+.active>.page-link, .page-link.active {
+    background-color: var(--theme-color);
+    border-color: var(--theme-color);
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: var(--theme-color);
+}

@@ -16,7 +16,7 @@
                 <div class="card-header justify-content-end">
 
                     <button type="button" class="btn btn-primary mt-md-0 mt-2" id="add_category_button" data-bs-toggle="modal"
-                            data-original-title="test" data-bs-target="#exampleModal">{{ 'product.category.add'|trans }}</button>
+                            data-original-title="test" data-bs-target="#productCategoryModal">{{ 'product.category.add'|trans }}</button>
                 </div>
 
                 <div class="card-body">
@@ -47,12 +47,11 @@
 {% endblock %}
 {% block modal %}
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal">
+    <div class="modal fade" id="productCategoryModal">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title f-w-600" id="exampleModalLabel">Add
-                        Digital Product</h5>
+                    <h5 class="modal-title f-w-600" id="productCategoryModalLabel"></h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>

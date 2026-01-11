@@ -16,6 +16,10 @@ return [
     'spanish' => 'Spanish',
     'save' => 'Save',
     'close' => 'Close',
+    'actions' => 'Actions',
+    'edit' => 'Edit',
+    'enable' => 'Enable',
+    'disable' => 'Disable',
     'image.text1' => 'Drag and drop the image here',
     'image.text2' => 'or',
     'image.text3' => 'Click here to search for image',
@@ -49,4 +53,5 @@ return [
     'product.category.description' => 'Product Category Description:',
     'product.category.image' => 'Product Category Image:',
     'product.category.add' => 'Add Category',
+    'product.category.edit' => 'Edit Category',
 ];

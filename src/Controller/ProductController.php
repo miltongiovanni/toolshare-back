@@ -135,12 +135,12 @@ final class ProductController extends AbstractController
         return $this->json($return);
     }
 
-    #[Route('/product/category/{id}', name: 'product_category_show', methods: ['GET'])]
-    public function product_category_show(Product $product): Response
+    #[Route('/product/category/get', name: 'product_category_get', methods: ['POST'])]
+    public function product_category_get(Request $request, ProductCategoryRepository $productCategoryRepository): JsonResponse
     {
-        return $this->render('product/category/show.html.twig', [
-            'product' => $product,
-        ]);
+        $category_id = $request->request->get('category_id');
+        $productCategory = $productCategoryRepository->find($category_id);
+        return $this->json($productCategory->toArray());
     }
 
     #[Route('/product/category/{id}/edit', name: 'product_category_edit', methods: ['GET', 'POST'])]
@@ -161,8 +161,8 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/product/category/{id}/update', name: 'product_category_update', methods: [ 'POST'])]
-    public function product_category_update(Request $request, string $id, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): Response
+    #[Route('/product/category/update', name: 'product_category_update', methods: [ 'POST'])]
+    public function product_category_update(Request $request, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): JsonResponse
     {
         $category_id = $request->request->get('category_id');
         $image = $request->request->get('image');
@@ -177,7 +177,7 @@ final class ProductController extends AbstractController
             $productCategory = new ProductCategory();
             $productCategory->setCreatedAt(Carbon::now()->toDateTimeImmutable());
         }else{
-            $productCategory = $productCategoryRepository->find($id);
+            $productCategory = $productCategoryRepository->find($category_id);
             $productCategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
         }
         $productCategory->translate('en')->setName($name_en);
@@ -191,9 +191,32 @@ final class ProductController extends AbstractController
         $productCategory->mergeNewTranslations();
         $em->persist($productCategory);
         $em->flush();
-        dd($request->request->all(), $productCategory, $id, $category_id);
+        return $this->json(['success' => true]);
+    }
 
+    #[Route('/product/category/enable', name: 'product_category_enable', methods: [ 'POST'])]
+    public function product_category_enable(Request $request, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): JsonResponse
+    {
 
+        $category_id = $request->request->get('category_id');
+        $productCategory = $productCategoryRepository->find($category_id);
+        $productCategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
+        $productCategory->setEnabled(true);
+        $em->persist($productCategory);
+        $em->flush();
+        return $this->json(['success' => true]);
+    }
+    #[Route('/product/category/disable', name: 'product_category_disable', methods: [ 'POST'])]
+    public function product_category_disable(Request $request, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): JsonResponse
+    {
+
+        $category_id = $request->request->get('category_id');
+        $productCategory = $productCategoryRepository->find($category_id);
+        $productCategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
+        $productCategory->setEnabled(false);
+        $em->persist($productCategory);
+        $em->flush();
+        return $this->json(['success' => true]);
     }
 
     #[Route('/product/category/delete/{id}', name: 'product_category_delete', methods: ['POST'])]

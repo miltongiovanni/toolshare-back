@@ -152,7 +152,13 @@ class ProductCategory implements TranslatableInterface
         return [
             'id' => $this->getId(),
             'name' => $this->getName(),
+            'name_en' => $this->translate('en')->getName(),
+            'name_fr' => $this->translate('fr')->getName(),
+            'name_es' => $this->translate('es')->getName(),
             'description' => $this->getDescription(),
+            'description_en' => $this->translate('en')->getDescription(),
+            'description_fr' => $this->translate('fr')->getDescription(),
+            'description_es' => $this->translate('es')->getDescription(),
             'image' => $this->getImage(),
             'created_at' => Carbon::parse($this->getCreatedAt())->toISOString(),
             'updated_at' => $this->getUpdatedAt() != null ? Carbon::parse($this->getUpdatedAt())->toISOString() : Carbon::parse($this->getCreatedAt())->toISOString(),

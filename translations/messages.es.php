@@ -16,6 +16,10 @@ return [
     'spanish' => 'Español',
     'save' => 'Guardar',
     'close' => 'Cerrar',
+    'actions' => 'Acciones',
+    'edit' => 'Modificar',
+    'enable' => 'Activar',
+    'disable' => 'Desactivar',
     'image.text1' => 'Arrastrar y soltar la imagen aquí',
     'image.text2' => 'o',
     'image.text3' => 'Hacer clic aquí para buscar la imagen',
@@ -49,4 +53,5 @@ return [
     'product.category.description' => 'Descripción de la categoría del producto:',
     'product.category.image' => 'Imagen de la categoría del producto:',
     'product.category.add' => 'Agregar categoría',
+    'product.category.edit' => 'Editar categoría',
 ];

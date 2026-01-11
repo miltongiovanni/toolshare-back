@@ -24,6 +24,30 @@ import featherIcons from "feather-icons";
 featherIcons.replace();
 import "bootstrap-icons/font/bootstrap-icons.min.css"
 
+let I18N = {};
+
+async function loadTranslations() {
+    const res = await fetch('/js-translations');
+    I18N = await res.json();
+}
+
+await loadTranslations();
+
+function t(key, params = {}) {
+    let text = I18N[key] ?? key;
+
+    Object.entries(params).forEach(([k, v]) => {
+        text = text.replace(`%${k}%`, v);
+    });
+
+    return text;
+}
+
+window.t = t;
+
+
+
+
 (function ($) {
     "use strict";
     $(".mobile-toggle").click(function () {

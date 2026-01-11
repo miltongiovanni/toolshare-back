@@ -28,6 +28,11 @@ services:
         arguments:
             $targetDirectory: '%images_directory%'
 
+    App\EventSubscriber\LocaleSubscriber:
+        arguments: ['%kernel.default_locale%']
+        # uncomment the next line if you are not using autoconfigure
+        # tags: [kernel.event_subscriber]
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     Symfony\Component\Uid\Command\GenerateUlidCommand: ~
