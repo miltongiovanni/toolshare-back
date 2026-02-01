@@ -9,8 +9,10 @@ import languageEs from 'datatables.net-plugins/i18n/es-CO.mjs';
 import Dropzone from "dropzone";
 // Optionally, import the dropzone file to get default styling.
 import "dropzone/dist/dropzone.css";
+Dropzone.autoDiscover = false;
 import {DateTime} from "luxon";
-import { Modal } from 'bootstrap';
+import {Modal} from 'bootstrap';
+
 const productCategoryModal = new Modal(document.getElementById('productCategoryModal'));
 let language = locale === 'en' ? languageEn : (locale === 'fr' ? languageFr : languageEs);
 
@@ -32,10 +34,14 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
                 return '<img class="img-fluid" src="' + imgUrl + '" alt="' + data + '">';
             }
         },
-        {data: 'name',
-            width: '20%',},
-        {data: 'description',
-            width: '20%',},
+        {
+            data: 'name',
+            width: '20%',
+        },
+        {
+            data: 'description',
+            width: '20%',
+        },
         {
             data: 'created_at',
             width: '15%',
@@ -69,10 +75,10 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
                     '    </button>\n' +
                     '    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n' +
                     '        <li class="w-100">\n' +
-                    '            <button data-category-id="'+ row.id +'"  type="button" class="dropdown-item '+ actionClass+ '" >'+ actionTitle + '</button>\n' +
+                    '            <button data-category-id="' + row.id + '"  type="button" class="dropdown-item ' + actionClass + '" >' + actionTitle + '</button>\n' +
                     '        </li>\n' +
                     '        <li class="w-100">\n' +
-                    '            <button data-category-id="'+ row.id +'"  type="button" class="dropdown-item category-edit" >' + t('edit') +'</button>\n' +
+                    '            <button data-category-id="' + row.id + '"  type="button" class="dropdown-item category-edit" >' + t('edit') + '</button>\n' +
                     '        </li>\n' +
                     '    </ul>\n' +
                     '</div>'
@@ -93,36 +99,7 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
     language: language,
 });
 
-let myDropzone = new Dropzone("div#image_upload",
-    {
-        paramName: "file", // The name that will be used to transfer the file
-        maxFilesize: 2, // MB
-        url: "/uploadImage",
-        maxFiles: 1,
-        clickable: true,
-        dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
-        acceptedFiles: 'image/*',
-        createImageThumbnails: false,
-        thumbnailMethod: 'contain',
-        accept: function (file, done) {
-            if (file.name === "justinbieber.jpg") {
-                done("Naha, you don't.");
-            } else {
-                done();
-            }
-        },
 
-        // When the complete upload is finished and successful
-        // Receives `file`
-        success(file) {
-            $('#dropzoneTitle').hide();
-            let response = JSON.parse(file.xhr.response);
-            let imgUrl = $('#image_upload').data('base-url') + 'uploads/images/' + response.location;
-            $('#img-product').attr('src', imgUrl).removeClass('d-none');
-            $('#img-preview').show();
-            $('#image').val(response.location);
-        },
-    });
 $(document).on('click', '#add_category_button', function () {
     $('#productCategoryModalLabel').html(t('product.category.add'));
     $('#category_id').val(0)
@@ -179,6 +156,54 @@ $(document).on('click', '#add_category_button', function () {
     $('#productCategoryModalLabel').html(t('product.category.add'));
     $('#category_id').val(0)
 });
+const productCategoryModalEl = document.getElementById('productCategoryModal');
+productCategoryModalEl.addEventListener('hidden.bs.modal', event => {
+    const dz = document.getElementById("image_upload")?.dropzone;
+
+    if (dz) {
+        dz.removeAllFiles(true);
+    }
+    $('#category_form').trigger("reset").removeClass("was-validated");
+    $('#img-product').addClass('d-none').attr('src', '');
+    $('#dropzoneTitle').show();
+
+})
+productCategoryModalEl.addEventListener('shown.bs.modal', event => {
+    const dzElement = document.getElementById("image_upload");
+    if (!dzElement.dropzone) {
+        new Dropzone("div#image_upload",
+            {
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 2, // MB
+                url: "/uploadImage",
+                maxFiles: 1,
+                clickable: true,
+                dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
+                acceptedFiles: 'image/*',
+                createImageThumbnails: false,
+                thumbnailMethod: 'contain',
+                accept: function (file, done) {
+                    if (file.name === "justinbieber.jpg") {
+                        done("Naha, you don't.");
+                    } else {
+                        done();
+                    }
+                },
+
+                // When the complete upload is finished and successful
+                // Receives `file`
+                success(file) {
+                    $('#dropzoneTitle').hide();
+                    let response = JSON.parse(file.xhr.response);
+                    let imgUrl = $('#image_upload').data('base-url') + 'uploads/images/' + response.location;
+                    $('#img-product').attr('src', imgUrl).removeClass('d-none');
+                    $('#img-preview').show();
+                    $('#image').val(response.location);
+                },
+            });
+    }
+
+})
 $(document).on('click', '.category-enabled', function () {
     let category_id = $(this).data('categoryId');
     $.ajax({
@@ -248,7 +273,6 @@ $(document).on('click', '.category-edit', function () {
             $('#description_fr').val(response.description_fr);
             $('#description_es').val(response.description_es);
 
-            console.log(response);
             $('#productCategoryModalLabel').html(t('product.category.edit'));
             $('#category_id').val(category_id);
             productCategoryModal.show();

@@ -30,7 +30,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="{{ is_active('category_product_index') }}">
                 <a class="sidebar-header" href="javascript:void(0)">
                     <i data-feather="box"></i>
                     <span>{{ 'menu.products'|trans }}</span>
@@ -38,7 +38,7 @@
                 </a>
 
                 <ul class="sidebar-submenu">
-                    <li>
+                    <li class="{{ is_active('category_product_index') }}">
                         <a href="{{ path('category_product_index') }}">
                             <i class="fa fa-circle"></i>{{ 'menu.products.category'|trans }}
                         </a>
