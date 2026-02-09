@@ -44,6 +44,10 @@ return [
         'path' => './assets/js/pages/category.js',
         'entrypoint' => true,
     ],
+    'subcategory' => [
+        'path' => './assets/js/pages/subcategory.js',
+        'entrypoint' => true,
+    ],
     'jquery' => [
         'version' => '3.7.1',
     ],

@@ -20,6 +20,7 @@ return [
     'edit' => 'Modifier',
     'enable' => 'Activer',
     'disable' => 'Désactiver',
+    'select' => 'Sélectionner',
     'image.text1' => 'Glisser-déposer l’image ici',
     'image.text2' => 'ou',
     'image.text3' => 'Cliquez ici pour rechercher l’image',
@@ -34,6 +35,8 @@ return [
     'table.enabled.f' => 'Activée',
     'table.image' => 'Image',
     'table.title' => 'Titre',
+    'table.category.name' => 'Catégorie du produit',
+    'table.subcategory.name' => 'Sous-catégorie du produit',
 
     //MENU
     'menu.dashboard' => 'Tableau de bord',
@@ -54,6 +57,12 @@ return [
     'product.category.image' => 'Image de la catégorie du produit:',
     'product.category.add' => 'Ajouter catégorie',
     'product.category.edit' => 'Modifier la catégorie',
+    'product.subcategory.name' => 'Nom de la sous-catégorie du produit :',
+    'product.subcategory.name.error' => 'Veuillez entrer un nom de sous-catégorie de produit',
+    'product.subcategory.description' => 'Description de la sous-catégorie du produit:',
+    'product.subcategory.image' => 'Image de la sous-catégorie du produit:',
+    'product.subcategory.add' => 'Ajouter sous-catégorie',
+    'product.subcategory.edit' => 'Modifier la sous-catégorie',
 
 
 ];

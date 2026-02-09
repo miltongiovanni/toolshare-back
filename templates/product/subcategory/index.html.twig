@@ -2,38 +2,146 @@
 
 {% block title %}Product index{% endblock %}
 
-{% block body %}
-    <h1>Product index</h1>
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% block importmap %}{{ importmap(['app', 'sidebar-menu', 'subcategory']) }}{% endblock %}
+{% endblock %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>Enabled</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.createdAt ? product.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ product.updatedAt ? product.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ product.enabled ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header justify-content-end">
 
-    <a href="{{ path('product_new') }}">Create new</a>
+                <button type="button" class="btn btn-primary mt-md-0 mt-2" id="add_subcategory_button" data-bs-toggle="modal"
+                        data-original-title="test" data-bs-target="#productSubcategoryModal">{{ 'product.subcategory.add'|trans }}</button>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive table-desi">
+                    <table class="table table-category " id="subcategoriesDataTable">
+                        <thead>
+                        <tr>
+                            <th class="text-center">Id</th>
+                            <th class="text-center">{{ 'table.category.name'|trans }}</th>
+                            <th class="text-center">{{ 'table.subcategory.name'|trans }}</th>
+                            <th class="text-center">{{ 'table.description'|trans }}</th>
+                            <th class="text-center">{{ 'table.createdAt'|trans }}</th>
+                            <th class="text-center">{{ 'table.updatedAt'|trans }}</th>
+                            <th class="text-center">{{ 'table.enabled.m'|trans }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="productSubcategoryModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title f-w-600" id="productSubcategoryModalLabel"></h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" id="subcategory_form" novalidate enctype="multipart/form-data">
+                        <input type="hidden" id="subcategory_id" name="subcategory_id" value="">
+                        <div class="form">
+                            <div class="form-check form-switch d-block">
+                                <input class="form-check-input" type="checkbox" name="enabled" role="switch" value="1" id="enabled">
+                                <label class="form-check-label" for="enabled">{{ 'table.enabled.f'|trans }}</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="product_category_id" class="mb-1">* {{ 'product.category.name'|trans }}</label>
+                                <select name="product_category_id" id="product_category_id" class="custom-select form-control" required="">
+                                    <option value="">--{{ 'select'|trans }}--</option>
+                                    {% for category in product_categories %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab" aria-controls="english"
+                                            aria-selected="true">
+                                        {{ 'english'|trans }}</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link " id="french-tab" data-bs-toggle="tab" data-bs-target="#french" type="button" role="tab" aria-controls="french"
+                                            aria-selected="true">{{ 'french'|trans }}</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link " id="spanish-tab" data-bs-toggle="tab" data-bs-target="#spanish" type="button" role="tab" aria-controls="spanish"
+                                            aria-selected="true">{{ 'spanish'|trans }}</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="myTabContent">
+                                <div class="tab-pane fade show active" id="english" role="tabpanel" aria-labelledby="english-tab">
+
+                                    <div class="form-group">
+                                        <label for="name_en" class="mb-1">* {{ 'product.subcategory.name'|trans }}</label>
+                                        <input class="form-control" id="name_en" name="name_en" type="text" required>
+                                        <div class="invalid-feedback">
+                                            {{ 'product.subcategory.name.error'|trans }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description_en" class="mb-1">{{ 'product.subcategory.description'|trans }}</label>
+                                        <textarea class="form-control" id="description_en" name="description_en" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="french" role="tabpanel" aria-labelledby="french-tab">
+                                    <div class="form-group">
+                                        <label for="name_fr" class="mb-1">* {{ 'product.subcategory.name'|trans }}</label>
+                                        <input class="form-control" id="name_fr" name="name_fr" type="text" required>
+                                        <div class="invalid-feedback">
+                                            {{ 'product.subcategory.name.error'|trans }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description_fr" class="mb-1">{{ 'product.subcategory.description'|trans }}</label>
+                                        <textarea class="form-control" id="description_fr" name="description_fr" rows="2"></textarea>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="spanish" role="tabpanel" aria-labelledby="spanish-tab">
+                                    <div class="form-group">
+                                        <label for="name_es" class="mb-1">* {{ 'product.subcategory.name'|trans }}</label>
+                                        <input class="form-control" id="name_es" name="name_es" type="text" required>
+                                        <div class="invalid-feedback">
+                                            {{ 'product.subcategory.name.error'|trans }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="description_en" class="mb-1">{{ 'product.subcategory.description'|trans }}</label>
+                                        <textarea class="form-control" id="description_es" name="description_es" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="submit_category" type="button" form="subcategory_form">{{ 'save'|trans }}</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

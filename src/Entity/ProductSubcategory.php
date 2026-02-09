@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductSubcategoryRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -146,5 +147,26 @@ class ProductSubcategory implements TranslatableInterface
     {
         $this->translate(null, false)->setDescription($description);
         return $this;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'name_en' => $this->translate('en')->getName(),
+            'name_fr' => $this->translate('fr')->getName(),
+            'name_es' => $this->translate('es')->getName(),
+            'description' => $this->getDescription(),
+            'description_en' => $this->translate('en')->getDescription(),
+            'description_fr' => $this->translate('fr')->getDescription(),
+            'description_es' => $this->translate('es')->getDescription(),
+            'category' => $this->getProductCategory()->getName(),
+            'category_id' => $this->getProductCategory()->getId(),
+            'created_at' => Carbon::parse($this->getCreatedAt())->toISOString(),
+            'updated_at' => $this->getUpdatedAt() != null ? Carbon::parse($this->getUpdatedAt())->toISOString() : Carbon::parse($this->getCreatedAt())->toISOString(),
+            'enabled' => $this->isEnabled(),
+        ];
+
     }
 }

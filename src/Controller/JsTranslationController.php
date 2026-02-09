@@ -19,6 +19,8 @@ class JsTranslationController
             'disable' => $translator->trans('disable'),
             'product.category.add' => $translator->trans('product.category.add'),
             'product.category.edit' => $translator->trans('product.category.edit'),
+            'product.subcategory.add' => $translator->trans('product.subcategory.add'),
+            'product.subcategory.edit' => $translator->trans('product.subcategory.edit'),
         ];
 
         return new JsonResponse($messages);

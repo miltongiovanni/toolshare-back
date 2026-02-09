@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Entity\ProductCategory;
+use App\Entity\ProductSubcategory;
 use App\Form\ProductType;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductSubcategoryRepository;
 use App\Service\BreadcrumbService;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
@@ -110,16 +112,15 @@ final class ProductController extends AbstractController
         $this->breadcrumbService->add($this->translator->trans('menu.products.category'), $this->generateUrl('category_product_index'));
         $breadcrumbs = $this->breadcrumbService->all();
         return $this->render('product/category/index.html.twig', [
-            'product_categories' => $productCategoryRepository->findAll(),
             'breadcrumbs' => $breadcrumbs,
             'page_title' => $page_title,
         ]);
     }
 
     #[Route('/product/category/list', name: 'product_category_list', methods: [ 'POST'])]
-    public function product_category_list(ProductCategoryRepository $productCategoryRepositoryRequest): JsonResponse
+    public function product_category_list(ProductCategoryRepository $productCategoryRepository): JsonResponse
     {
-        $productsCategories = $productCategoryRepositoryRequest->findAll();
+        $productsCategories = $productCategoryRepository->findAll();
         //To array
         $productsCategoriesArray = array_map(function ($productCategory) {
             /** @var ProductCategory $productCategory */
@@ -143,23 +144,6 @@ final class ProductController extends AbstractController
         return $this->json($productCategory->toArray());
     }
 
-    #[Route('/product/category/{id}/edit', name: 'product_category_edit', methods: ['GET', 'POST'])]
-    public function product_category_edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('product/category/edit.html.twig', [
-            'product' => $product,
-            'form' => $form,
-        ]);
-    }
 
     #[Route('/product/category/update', name: 'product_category_update', methods: [ 'POST'])]
     public function product_category_update(Request $request, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): JsonResponse
@@ -229,58 +213,114 @@ final class ProductController extends AbstractController
 
         return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
     }
-    #[Route('/product/subcategory/',name: 'product_subcategory_index', methods: ['GET'])]
-    public function product_subcategory_index(ProductRepository $productRepository): Response
+    #[Route( path: [
+        'en' => '/en/product/subcategory/',
+        'fr' => '/fr/produit/sous-categorie/',
+        'es' => '/es/producto/subcategoria/'
+    ], name: 'product_subcategory_index', methods: ['GET'])]
+    public function product_subcategory_index(Request $request, ProductCategoryRepository $productCategoryRepository): Response
     {
+        $locale = $request->getLocale();
+        $page_title = $this->translator->trans('menu.products'). ' - '.$this->translator->trans('menu.products.subcategory');
+        $this->breadcrumbService->add($this->translator->trans('menu.dashboard'), $this->generateUrl('home'));
+        $this->breadcrumbService->add($this->translator->trans('menu.products'), $this->generateUrl('product_index'));
+        $this->breadcrumbService->add($this->translator->trans('menu.products.category'), $this->generateUrl('category_product_index'));
+        $this->breadcrumbService->add($this->translator->trans('menu.products.subcategory'), $this->generateUrl('product_subcategory_index'));
+        $breadcrumbs = $this->breadcrumbService->all();
+
+        $productCategories = $productCategoryRepository->findProductCategories($locale);
+
         return $this->render('product/subcategory/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'product_categories' => $productCategories,
+            'breadcrumbs' => $breadcrumbs,
+            'page_title' => $page_title,
         ]);
     }
 
-    #[Route('/product/new', name: 'product_subcategory_new', methods: ['GET', 'POST'])]
-    public function product_subcategory_new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/product/subcategory/list', name: 'product_subcategory_list', methods: [ 'POST'])]
+    public function product_subcategory_list(ProductSubcategoryRepository $productSubcategoryRepository): JsonResponse
     {
-        $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
+        $productsSubcategories = $productSubcategoryRepository->findAll();
+        //To array
+        $productsSubcategoriesArray = array_map(function ($productSubcategory) {
+            /** @var ProductSubcategory $productSubcategory */
+            return $productSubcategory->toArray();
+        }, $productsSubcategories);
+        $return = [
+            'draw' => 0,
+            'recordsTotal' => count($productsSubcategoriesArray),
+            'recordsFiltered' => count($productsSubcategoriesArray),
+            'data' => $productsSubcategoriesArray
+        ];
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($product);
-            $entityManager->flush();
+        return $this->json($return);
+    }
 
-            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
+    #[Route('/product/subcategory/get', name: 'product_subcategory_get', methods: ['POST'])]
+    public function product_subcategory_get(Request $request, ProductSubcategoryRepository $productSubcategoryRepository): JsonResponse
+    {
+        $subcategory_id = $request->request->get('subcategory_id');
+        $productSubcategory = $productSubcategoryRepository->find($subcategory_id);
+        return $this->json($productSubcategory->toArray());
+    }
+
+    #[Route('/product/subcategory/update', name: 'product_subcategory_update', methods: [ 'POST'])]
+    public function product_subcategory_update(Request $request, ProductSubcategoryRepository $productSubcategoryRepository, ProductCategoryRepository $productCategoryRepository, EntityManagerInterface $em): JsonResponse
+    {
+        $subcategory_id = $request->request->get('subcategory_id');
+        $product_category_id = $request->request->get('product_category_id');
+        $productCategory = $productCategoryRepository->find($product_category_id);
+        $name_en = $request->request->get('name_en');
+        $description_en = $request->request->get('description_en');
+        $name_fr = $request->request->get('name_fr');
+        $description_fr = $request->request->get('description_fr');
+        $name_es = $request->request->get('name_es');
+        $description_es = $request->request->get('description_es');
+        $enabled = $request->request->get('enabled', false);
+        if ($subcategory_id === '0'){
+            $productSubcategory = new ProductSubcategory();
+            $productSubcategory->setCreatedAt(Carbon::now()->toDateTimeImmutable());
+        }else{
+            $productSubcategory = $productSubcategoryRepository->find($subcategory_id);
+            $productSubcategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
         }
-
-        return $this->render('product/subcategory/new.html.twig', [
-            'product' => $product,
-            'form' => $form,
-        ]);
+        $productSubcategory->translate('en')->setName($name_en);
+        $productSubcategory->translate('fr')->setName($name_fr);
+        $productSubcategory->translate('es')->setName($name_es);
+        $productSubcategory->translate('en')->setDescription($description_en);
+        $productSubcategory->translate('fr')->setDescription($description_fr);
+        $productSubcategory->translate('es')->setDescription($description_es);
+        $productSubcategory->setEnabled($enabled);
+        $productSubcategory->setProductCategory($productCategory);
+        $productSubcategory->mergeNewTranslations();
+        $em->persist($productSubcategory);
+        $em->flush();
+        return $this->json(['success' => true]);
     }
 
-    #[Route('/product/{id}', name: 'product_subcategory_show', methods: ['GET'])]
-    public function product_subcategory_show(Product $product): Response
+    #[Route('/product/subcategory/enable', name: 'product_subcategory_enable', methods: [ 'POST'])]
+    public function product_subcategory_enable(Request $request, ProductSubcategoryRepository $productSubcategoryRepository, EntityManagerInterface $em): JsonResponse
     {
-        return $this->render('product/subcategory/show.html.twig', [
-            'product' => $product,
-        ]);
+
+        $subcategory_id = $request->request->get('subcategory_id');
+        $productSubcategory = $productSubcategoryRepository->find($subcategory_id);
+        $productSubcategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
+        $productSubcategory->setEnabled(true);
+        $em->persist($productSubcategory);
+        $em->flush();
+        return $this->json(['success' => true]);
     }
-
-    #[Route('/product/{id}/edit', name: 'product_subcategory_edit', methods: ['GET', 'POST'])]
-    public function product_subcategory_edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    #[Route('/product/subcategory/disable', name: 'product_category_disable', methods: [ 'POST'])]
+    public function product_subcategory_disable(Request $request, ProductSubcategoryRepository $productSubcategoryRepository, EntityManagerInterface $em): JsonResponse
     {
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('product_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('product/subcategory/edit.html.twig', [
-            'product' => $product,
-            'form' => $form,
-        ]);
+        $subcategory_id = $request->request->get('subcategory_id');
+        $productSubcategory = $productSubcategoryRepository->find($subcategory_id);
+        $productSubcategory->setupdatedAt(Carbon::now()->toDateTimeImmutable());
+        $productSubcategory->setEnabled(false);
+        $em->persist($productSubcategory);
+        $em->flush();
+        return $this->json(['success' => true]);
     }
 
     #[Route('/product/{id}', name: 'product_subcategory_delete', methods: ['POST'])]

@@ -6,19 +6,15 @@ import languageEn from 'datatables.net-plugins/i18n/en-GB.mjs';
 import languageFr from 'datatables.net-plugins/i18n/fr-FR.mjs';
 import languageEs from 'datatables.net-plugins/i18n/es-CO.mjs';
 //Import Dropzone
-import Dropzone from "dropzone";
-// Optionally, import the dropzone file to get default styling.
-import "dropzone/dist/dropzone.css";
-Dropzone.autoDiscover = false;
 import {DateTime} from "luxon";
 import {Modal} from 'bootstrap';
 
-const productCategoryModal = new Modal(document.getElementById('productCategoryModal'));
+const productSubcategoryModal = new Modal(document.getElementById('productSubcategoryModal'));
 let language = locale === 'en' ? languageEn : (locale === 'fr' ? languageFr : languageEs);
 
-let categoriesDataTable = new DataTable("#categoriesDataTable", {
+let subcategoriesDataTable = new DataTable("#subcategoriesDataTable", {
     ajax: {
-        url: '/product/category/list',
+        url: '/product/subcategory/list',
         type: "POST",
         dataType: "json"
     }, columns: [
@@ -27,12 +23,9 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
             width: '5%',
         },
         {
-            data: 'image',
-            width: '5%',
-            render: function (data, type, row) {
-                let imgUrl = app_url + 'uploads/images/' + data;
-                return '<img class="img-fluid" src="' + imgUrl + '" alt="' + data + '">';
-            }
+            data: 'category',
+            width: '20%',
+
         },
         {
             data: 'name',
@@ -44,14 +37,14 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
         },
         {
             data: 'created_at',
-            width: '15%',
+            width: '10%',
             render: function (data, type, row) {
                 return DateTime.fromISO(data).setLocale(locale).toISODate();
             }
         },
         {
             data: 'updated_at',
-            width: '15%',
+            width: '10%',
             render: function (data, type, row) {
                 return DateTime.fromISO(data).setLocale(locale).toISODate();
             }
@@ -68,17 +61,17 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
             width: '10%',
             render: function (data, type, row) {
                 let actionTitle = row.enabled ? t('disable') : t('enable');
-                let actionClass = row.enabled ? 'category-enabled' : 'category-disabled';
+                let actionClass = row.enabled ? 'subcategory-enabled' : 'subcategory-disabled';
                 return '<div class="dropdown">\n' +
                     '    <button type="button" class="btn btn-primary dropdown-toggle w-100" role="button" id="dropdownMenuLink"\n' +
                     '       data-bs-toggle="dropdown" aria-expanded="false">\n' + t('actions') +
                     '    </button>\n' +
                     '    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n' +
                     '        <li class="w-100">\n' +
-                    '            <button data-category-id="' + row.id + '"  type="button" class="dropdown-item ' + actionClass + '" >' + actionTitle + '</button>\n' +
+                    '            <button data-subcategory-id="' + row.id + '"  type="button" class="dropdown-item ' + actionClass + '" >' + actionTitle + '</button>\n' +
                     '        </li>\n' +
                     '        <li class="w-100">\n' +
-                    '            <button data-category-id="' + row.id + '"  type="button" class="dropdown-item category-edit" >' + t('edit') + '</button>\n' +
+                    '            <button data-subcategory-id="' + row.id + '"  type="button" class="dropdown-item subcategory-edit" >' + t('edit') + '</button>\n' +
                     '        </li>\n' +
                     '    </ul>\n' +
                     '</div>'
@@ -88,7 +81,7 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
     "columnDefs":
         [
             {
-                "targets": [0, 1, 6, 7],
+                "targets": [0, 6, 7],
                 "className": 'dt-body-center'
             },
             {
@@ -121,10 +114,10 @@ let categoriesDataTable = new DataTable("#categoriesDataTable", {
 // })()
 
 $(document).on('click', '#submit_category', function () {
-    let form = document.getElementById('category_form');
+    let form = document.getElementById('subcategory_form');
     form.classList.add('was-validated');
     if (form.checkValidity()) {
-        let url = '/product/category/update';
+        let url = '/product/subcategory/update';
         // Create a FormData object from the form
         var formData = new FormData(form);
         $.ajax({
@@ -137,8 +130,8 @@ $(document).on('click', '#submit_category', function () {
             success: function (response) {
                 // Handle a successful response from the server
                 $('#response-message').html('Success: ' + JSON.stringify(response));
-                categoriesDataTable.ajax.reload();
-                productCategoryModal.hide();
+                subcategoriesDataTable.ajax.reload();
+                productSubcategoryModal.hide();
             },
             error: function (xhr, status, error) {
                 // Handle errors
@@ -148,74 +141,31 @@ $(document).on('click', '#submit_category', function () {
         });
     }
 });
-
-$(document).on('click', '#add_category_button', function () {
-    $('#productCategoryModalLabel').html(t('product.category.add'));
-    $('#category_id').val(0)
+$(document).on('click', '#add_subcategory_button', function () {
+    $('#productSubcategoryModalLabel').html(t('product.subcategory.add'));
+    $('#subcategory_id').val(0)
 });
-const productCategoryModalEl = document.getElementById('productCategoryModal');
-productCategoryModalEl.addEventListener('hidden.bs.modal', event => {
-    const dz = document.getElementById("image_upload")?.dropzone;
-
-    if (dz) {
-        dz.removeAllFiles(true);
-    }
-    $('#category_form').trigger("reset").removeClass("was-validated");
+const productSubcategoryModalEl = document.getElementById('productSubcategoryModal');
+productSubcategoryModalEl.addEventListener('hidden.bs.modal', event => {
+    $('#subcategory_form').trigger("reset").removeClass("was-validated");
     $('#english-tab').trigger("click");
-    $('#img-product').addClass('d-none').attr('src', '');
-    $('#dropzoneTitle').show();
 
 })
-productCategoryModalEl.addEventListener('shown.bs.modal', event => {
-    const dzElement = document.getElementById("image_upload");
-    if (!dzElement.dropzone) {
-        new Dropzone("div#image_upload",
-            {
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 2, // MB
-                url: "/uploadImage",
-                maxFiles: 1,
-                clickable: true,
-                dictMaxFilesExceeded: 'Only 1 Image can be uploaded',
-                acceptedFiles: 'image/*',
-                createImageThumbnails: false,
-                thumbnailMethod: 'contain',
-                accept: function (file, done) {
-                    if (file.name === "justinbieber.jpg") {
-                        done("Naha, you don't.");
-                    } else {
-                        done();
-                    }
-                },
 
-                // When the complete upload is finished and successful
-                // Receives `file`
-                success(file) {
-                    $('#dropzoneTitle').hide();
-                    let response = JSON.parse(file.xhr.response);
-                    let imgUrl = $('#image_upload').data('base-url') + 'uploads/images/' + response.location;
-                    $('#img-product').attr('src', imgUrl).removeClass('d-none');
-                    $('#img-preview').show();
-                    $('#image').val(response.location);
-                },
-            });
-    }
-
-})
-$(document).on('click', '.category-enabled', function () {
-    let category_id = $(this).data('categoryId');
+$(document).on('click', '.subcategory-enabled', function () {
+    let subcategory_id = $(this).data('subcategoryId');
     $.ajax({
-        url: '/product/category/disable', // Use the form's action attribute
+        url: '/product/subcategory/disable', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            category_id: category_id,
+            subcategory_id: subcategory_id,
         },
         dataType: "json",
         success: function (response) {
             // Handle a successful response from the server
             $('#response-message').html('Success: ' + JSON.stringify(response));
-            categoriesDataTable.ajax.reload();
-            productCategoryModal.hide();
+            subcategoriesDataTable.ajax.reload();
+            productSubcategoryModal.hide();
         },
         error: function (xhr, status, error) {
             // Handle errors
@@ -226,20 +176,20 @@ $(document).on('click', '.category-enabled', function () {
 });
 
 
-$(document).on('click', '.category-disabled', function () {
-    let category_id = $(this).data('categoryId');
+$(document).on('click', '.subcategory-disabled', function () {
+    let subcategory_id = $(this).data('subcategoryId');
     $.ajax({
-        url: '/product/category/enable', // Use the form's action attribute
+        url: '/product/subcategory/enable', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            category_id: category_id,
+            subcategory_id: subcategory_id,
         },
         dataType: "json",
         success: function (response) {
             // Handle a successful response from the server
             $('#response-message').html('Success: ' + JSON.stringify(response));
-            categoriesDataTable.ajax.reload();
-            productCategoryModal.hide();
+            subcategoriesDataTable.ajax.reload();
+            productSubcategoryModal.hide();
         },
         error: function (xhr, status, error) {
             // Handle errors
@@ -248,22 +198,19 @@ $(document).on('click', '.category-disabled', function () {
         }
     });
 });
-$(document).on('click', '.category-edit', function () {
-    let category_id = $(this).data('categoryId');
+$(document).on('click', '.subcategory-edit', function () {
+    let subcategory_id = $(this).data('subcategoryId');
     $.ajax({
-        url: '/product/category/get', // Use the form's action attribute
+        url: '/product/subcategory/get', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            category_id: category_id,
+            subcategory_id: subcategory_id,
         },
         dataType: "json",
         success: function (response) {
             // Handle a successful response from the server
             $('#enabled').prop('checked', response.enabled);
-            $('#image').val(response.image);
-            let imgUrl = app_url + 'uploads/images/' + response.image;
-            $('#img-product').attr('src', imgUrl).removeClass('d-none');
-            $('#dropzoneTitle').hide();
+
             $('#name_en').val(response.name_en);
             $('#name_fr').val(response.name_fr);
             $('#name_es').val(response.name_es);
@@ -271,9 +218,10 @@ $(document).on('click', '.category-edit', function () {
             $('#description_fr').val(response.description_fr);
             $('#description_es').val(response.description_es);
 
-            $('#productCategoryModalLabel').html(t('product.category.edit'));
-            $('#category_id').val(category_id);
-            productCategoryModal.show();
+            $('#productSubcategoryModalLabel').html(t('product.category.edit'));
+            $('#subcategory_id').val(subcategory_id);
+            $('#product_category_id').val(response.category_id);
+            productSubcategoryModal.show();
         },
         error: function (xhr, status, error) {
             // Handle errors

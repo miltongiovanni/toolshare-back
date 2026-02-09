@@ -16,20 +16,22 @@ class ProductCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductCategory::class);
     }
 
-    //    /**
-    //     * @return ProductCategory[] Returns an array of ProductCategory objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        public function findProductCategories($locale): array
+        {
+
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p.id', 't.name', 'p.image')
+                ->from(ProductCategory::class, 'p')
+                ->join('p.translations', 't')
+                ->andWhere('t.locale = :locale')
+                ->andWhere('p.enabled = 1')
+                ->setParameter('locale', $locale)
+                ->orderBy('t.name', 'ASC');
+            return $qb
+                ->getQuery()
+                ->getResult();
+
+        }
 
     //    public function findOneBySomeField($value): ?ProductCategory
     //    {

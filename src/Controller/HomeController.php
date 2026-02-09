@@ -30,9 +30,9 @@ final class HomeController extends AbstractController
     }
     #[Route(
         path: [
-            'en' => '/en/',
-            'fr' => '/fr/',
-            'es' => '/es/'
+            'en' => '/en/dashboard',
+            'fr' => '/fr/tableau-de-bord',
+            'es' => '/es/dashboard'
         ],
         name: 'home'
     )]
