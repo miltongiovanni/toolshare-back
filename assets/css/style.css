@@ -2748,7 +2748,7 @@ body {
     font-family: Lato, sans-serif;
     position: relative;
     background: #ffffff;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 h1 {
@@ -8775,7 +8775,7 @@ footer.blockquote-footer {
 }
 
 .needs-validation input {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .needs-validation .form-group {

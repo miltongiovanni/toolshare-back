@@ -90,6 +90,7 @@ let subcategoriesDataTable = new DataTable("#subcategoriesDataTable", {
             }
         ],
     language: language,
+    order: [[1, 'asc'], [2, 'asc']]
 });
 
 
