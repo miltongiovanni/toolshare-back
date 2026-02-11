@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}UserAdmin index{% endblock %}
+
+{% block body %}
+    <h1>UserAdmin index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>First_name</th>
+                <th>Last_name</th>
+                <th>Passcode</th>
+                <th>Is_verified</th>
+                <th>Created_at</th>
+                <th>Slug</th>
+                <th>Is_active</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user_admin in user_admins %}
+            <tr>
+                <td>{{ user_admin.id }}</td>
+                <td>{{ user_admin.email }}</td>
+                <td>{{ user_admin.roles ? user_admin.roles|json_encode : '' }}</td>
+                <td>{{ user_admin.password }}</td>
+                <td>{{ user_admin.firstName }}</td>
+                <td>{{ user_admin.lastName }}</td>
+                <td>{{ user_admin.passcode }}</td>
+                <td>{{ user_admin.isVerified ? 'Yes' : 'No' }}</td>
+                <td>{{ user_admin.createdAt ? user_admin.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ user_admin.slug }}</td>
+                <td>{{ user_admin.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_user_admin_show', {'id': user_admin.id}) }}">show</a>
+                    <a href="{{ path('app_user_admin_edit', {'id': user_admin.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_admin_new') }}">Create new</a>
+{% endblock %}
