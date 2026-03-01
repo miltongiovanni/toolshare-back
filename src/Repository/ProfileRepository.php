@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Profile>
  */
-class ProfilRepository extends ServiceEntityRepository
+class ProfileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -33,11 +33,16 @@ class ProfilRepository extends ServiceEntityRepository
 
         public function getAllProfiles($locale): array
         {
-            $qb = $this->createQueryBuilder('p');
-            $qb->select(['p.id', 'p.code', 'p.slug_'.$locale.' AS slug', 'p.description_'.$locale.' AS description', 'p.created_at']);
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p.id', 'p.code', 't.slug', 't.description', 'p.created_at', 'p.updated_at')
+                ->from(Profile::class, 'p')
+                ->join('p.translations', 't')
+                ->andWhere('t.locale = :locale')
+                ->andWhere('p.enabled = 1')
+                ->setParameter('locale', $locale)
+                ->orderBy('t.description', 'ASC');
             return $qb
                 ->getQuery()
-                ->getResult()
-            ;
+                ->getResult();
         }
 }

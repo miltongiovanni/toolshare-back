@@ -16,14 +16,16 @@ security:
         main:
             lazy: true
             provider: user_provider
-            form_login:
-                login_path: login
-                check_path: login
-                enable_csrf: true
+#            form_login:
+#                login_path: login
+#                check_path: login
+#                enable_csrf: true
             logout:
                 path: logout
                 # where to redirect after logout
                 target: login
+            custom_authenticators:
+                - App\Security\UserAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,6 +39,12 @@ security:
          - { path: ^/en/login, roles: PUBLIC_ACCESS  }
          - { path: ^/fr/se-connecter, roles: PUBLIC_ACCESS }
          - { path: ^/es/acceso, roles: PUBLIC_ACCESS }
+         - { path: ^/en/reset/*, roles: PUBLIC_ACCESS }
+         - { path: ^/fr/reinitialiser/*, roles: PUBLIC_ACCESS }
+         - { path: ^/es/reiniciar/*, roles: PUBLIC_ACCESS }
+         - { path: ^/en/reset-password, roles: PUBLIC_ACCESS }
+         - { path: ^/fr/reinitialiser-mot-de-passe, roles: PUBLIC_ACCESS }
+         - { path: ^/es/reiniciar-clave-de-acceso, roles: PUBLIC_ACCESS }
          - { path: ^/, roles: ROLE_USER }
 
 when@test:

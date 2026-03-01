@@ -108,7 +108,7 @@
                 </ul>
             </li>
 
-            <li>
+            <li class="{{ is_active('user_admin_index') }}">
                 <a class="sidebar-header" href="javascript:void(0)">
                     <i data-feather="user-plus"></i>
                     <span>Users</span>
@@ -116,7 +116,7 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="user-list.html">
+                        <a href="{{ path ('user_admin_index') }}">
                             <i class="fa fa-circle"></i>User List
                         </a>
                     </li>

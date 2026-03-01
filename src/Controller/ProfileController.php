@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Profile;
 use App\Form\ProfileType;
-use App\Repository\ProfilRepository;
+use App\Repository\ProfileRepository;
 use App\Service\BreadcrumbService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +29,7 @@ final class ProfileController extends AbstractController
             'fr' => '/fr/profil/',
             'es' => '/es/perfil/'
         ],name: 'profile_index', methods: ['GET'])]
-    public function index(Request $request, ProfilRepository $profilRepository): Response
+    public function index(Request $request, ProfileRepository $profilRepository): Response
     {
         $locale = $request->getLocale();
         $profiles = $profilRepository->getAllProfiles($locale);

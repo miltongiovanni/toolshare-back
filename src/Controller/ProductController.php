@@ -228,7 +228,7 @@ final class ProductController extends AbstractController
         $this->breadcrumbService->add($this->translator->trans('menu.products.subcategory'), $this->generateUrl('product_subcategory_index'));
         $breadcrumbs = $this->breadcrumbService->all();
 
-        $productCategories = $productCategoryRepository->findProductCategories($locale);
+        $productCategories = $productCategoryRepository->getProductCategories($locale);
 
         return $this->render('product/subcategory/index.html.twig', [
             'product_categories' => $productCategories,

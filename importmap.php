@@ -48,6 +48,10 @@ return [
         'path' => './assets/js/pages/subcategory.js',
         'entrypoint' => true,
     ],
+    'user' => [
+        'path' => './assets/js/pages/user.js',
+        'entrypoint' => true,
+    ],
     'jquery' => [
         'version' => '3.7.1',
     ],

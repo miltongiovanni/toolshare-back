@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\ProfilRepository;
+use App\Repository\ProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
-#[ORM\Entity(repositoryClass: ProfilRepository::class)]
-class Profile
+#[ORM\Entity(repositoryClass: ProfileRepository::class)]
+class Profile implements TranslatableInterface
 {
+
+    use TranslatableTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,28 +25,17 @@ class Profile
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug_en = null;
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug_fr = null;
+    #[ORM\Column]
+    private ?bool $enabled = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $slug_es = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $description_en = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $description_fr = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $description_es = null;
 
     /**
      * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'profil')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'profile')]
     private Collection $users;
 
     /**
@@ -86,75 +79,50 @@ class Profile
         return $this;
     }
 
-    public function getSlugEn(): ?string
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->slug_en;
+        return $this->updated_at;
     }
 
-    public function setSlugEn(string $slug): static
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): static
     {
-        $this->slug_en = $slug;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getSlugFr(): ?string
+    public function isEnabled(): ?bool
     {
-        return $this->slug_fr;
+        return $this->enabled;
     }
 
-    public function setSlugFr(string $slug): static
+    public function setEnabled(bool $enabled): static
     {
-        $this->slug_fr = $slug;
+        $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function getSlugEs(): ?string
+    // Translatable methods
+    public function getSlug(): ?string
     {
-        return $this->slug_es;
+        return $this->translate(null, false)->getSlug();
     }
 
-    public function setSlugEs(string $slug): static
+    public function setSlug(string $slug): self
     {
-        $this->slug_es = $slug;
-
+        $this->translate(null, false)->setSlug($slug);
         return $this;
     }
 
-    public function getDescriptionEn(): ?string
+    public function getDescription(): ?string
     {
-        return $this->description_en;
+        return $this->translate(null, false)->getDescription();
     }
 
-    public function setDescriptionEn(string $description_en): static
+    public function setDescription(string $description): self
     {
-        $this->description_en = $description_en;
-
-        return $this;
-    }
-
-    public function getDescriptionFr(): ?string
-    {
-        return $this->description_fr;
-    }
-
-    public function setDescriptionFr(string $description_fr): static
-    {
-        $this->description_fr = $description_fr;
-
-        return $this;
-    }
-
-    public function getDescriptionEs(): ?string
-    {
-        return $this->description_es;
-    }
-
-    public function setDescriptionEs(string $description_es): static
-    {
-        $this->description_es = $description_es;
-
+        $this->translate(null, false)->setDescription($description);
         return $this;
     }
 
@@ -170,7 +138,7 @@ class Profile
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setProfil($this);
+            $user->setProfile($this);
         }
 
         return $this;
@@ -180,8 +148,8 @@ class Profile
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
-            if ($user->getProfil() === $this) {
-                $user->setProfil(null);
+            if ($user->getProfile() === $this) {
+                $user->setProfile(null);
             }
         }
 

@@ -1,0 +1,39 @@
+{% extends 'email/base.email.html.twig' %}
+
+{% block content %}
+
+    <tr>
+        <td class="section-t"
+            style="position: relative; padding: 0 calc(15px + (88 - 15) * ((100vw - 320px) / (1920 - 320))); margin-top: calc(25px + (32 - 25) * ((100vw - 320px) / (1920 - 320))); display: block">
+            <table style="border-collapse: collapse; border-spacing: 0; width: 100%">
+                <tr>
+                    <td>
+                        <h1 class="heading-1"
+                            style="margin-bottom: 6px; font-weight: bold; font-size: 16px; line-height: calc(17px + (20 - 17) * ((100vw - 320px) / (1920 - 320))); color: #252525">
+                            Hi {{ name }} And Welcome To Toolshare.!</h1>
+                        <p class="pera"
+                           style="font-weight: 600; font-size: 14px; line-height: calc(21px + (23 - 21) * ((100vw - 320px) / (1920 - 320))); text-align: center; color: #939393; margin-bottom: -4px">
+                            To reset your password, please visit the following link</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="section-t"
+            style="margin-top: calc(25px + (32 - 25) * ((100vw - 320px) / (1920 - 320))); display: block">
+            <a style="text-decoration: none; font-weight: bold; font-size: calc(17px + (20 - 17) * ((100vw - 320px) / (1920 - 320))); line-height: calc(22px + (27 - 22) * ((100vw - 320px) / (1920 - 320))); display: inline-block; color: #ffffff; background: #ec8951; border-radius: 6px; padding: calc(10px + (14 - 10) * ((100vw - 320px) / (1920 - 320))) calc(24px + (43 - 24) * ((100vw - 320px) / (1920 - 320)))"
+               href="{{ url('reset_password', {token: resetToken.token}) }}" class="button-solid">Verify Email</a>
+            <p class="pera"
+               style="font-weight: 600; font-size: 14px; line-height: calc(21px + (23 - 21) * ((100vw - 320px) / (1920 - 320))); text-align: center; color: #939393; margin-bottom: -4px">This link will
+                expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+            <p class="pera"
+               style="font-weight: 600; font-size: 14px; line-height: calc(21px + (23 - 21) * ((100vw - 320px) / (1920 - 320))); text-align: center; color: #939393; margin-bottom: -4px">Cheers!</p>
+        </td>
+    </tr>
+
+
+
+{% endblock %}

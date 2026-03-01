@@ -30,7 +30,7 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
@@ -39,8 +39,8 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $last_name = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $passcode = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $reset_token = null;
 
     #[ORM\Column]
     private ?bool $is_verified = null;
@@ -57,7 +57,10 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $is_active = null;
-    
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $last_login = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,14 +166,14 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPasscode(): ?int
+    public function getResetToken(): ?string
     {
-        return $this->passcode;
+        return $this->reset_token;
     }
 
-    public function setPasscode(?int $passcode): static
+    public function setResetToken(?string $reset_token): static
     {
-        $this->passcode = $passcode;
+        $this->reset_token = $reset_token;
 
         return $this;
     }
@@ -192,7 +195,7 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->profile;
     }
 
-    public function setProfilee(?Profile $profile): static
+    public function setProfile(?Profile $profile): static
     {
         $this->profile = $profile;
 
@@ -231,6 +234,18 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $is_active): static
     {
         $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTimeImmutable
+    {
+        return $this->last_login;
+    }
+
+    public function setLastLogin(?\DateTimeImmutable $last_login): static
+    {
+        $this->last_login = $last_login;
 
         return $this;
     }

@@ -47,6 +47,7 @@ return [
     'menu.products.list' => 'Lista de productos',
     'menu.orders' => 'Órdenes',
     'menu.users' => 'Usuarios',
+    'menu.admin.users' => 'Usuarios Admin',
     'menu.profile' => 'Perfil',
 
     //PRODUCT
@@ -63,4 +64,18 @@ return [
     'product.subcategory.image' => 'Imagen de la subcategoría del producto:',
     'product.subcategory.add' => 'Agregar subcategoría',
     'product.subcategory.edit' => 'Editar subcategoría',
+
+    //USER
+
+    'user.first.name' => 'Nombre:',
+    'user.first.name.error' => 'Por favor, ingrese el nombre del usuario',
+    'user.last.name' => 'Apellido:',
+    'user.last.name.error' => 'Por favor, ingrese el apellido del usuario',
+    'user.email' => 'Correo electrónico:',
+    'user.email.error' => 'Por favor, ingrese el correo electrónico del usuario',
+    'user.profile' => 'Perfil del usuario',
+    'user.profile.error' => 'Por favor, seleccione el perfil del usuario',
+    'user.admin.image' => 'Product Category Image:',
+    'user.admin.add' => 'Agregar usuario',
+    'user.admin.edit' => 'Editar usuario',
 ];

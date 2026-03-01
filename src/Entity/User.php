@@ -192,7 +192,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->profile;
     }
 
-    public function setProfilee(?Profile $profile): static
+    public function setProfile(?Profile $profile): static
     {
         $this->profile = $profile;
 

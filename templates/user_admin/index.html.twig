@@ -2,52 +2,112 @@
 
 {% block title %}UserAdmin index{% endblock %}
 
-{% block body %}
-    <h1>UserAdmin index</h1>
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% block importmap %}{{ importmap(['app', 'sidebar-menu', 'user']) }}{% endblock %}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header justify-content-end">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>First_name</th>
-                <th>Last_name</th>
-                <th>Passcode</th>
-                <th>Is_verified</th>
-                <th>Created_at</th>
-                <th>Slug</th>
-                <th>Is_active</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user_admin in user_admins %}
-            <tr>
-                <td>{{ user_admin.id }}</td>
-                <td>{{ user_admin.email }}</td>
-                <td>{{ user_admin.roles ? user_admin.roles|json_encode : '' }}</td>
-                <td>{{ user_admin.password }}</td>
-                <td>{{ user_admin.firstName }}</td>
-                <td>{{ user_admin.lastName }}</td>
-                <td>{{ user_admin.passcode }}</td>
-                <td>{{ user_admin.isVerified ? 'Yes' : 'No' }}</td>
-                <td>{{ user_admin.createdAt ? user_admin.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user_admin.slug }}</td>
-                <td>{{ user_admin.isActive ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_user_admin_show', {'id': user_admin.id}) }}">show</a>
-                    <a href="{{ path('app_user_admin_edit', {'id': user_admin.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    <button type="button" class="btn btn-primary mt-md-0 mt-2" id="add_user_button" data-bs-toggle="modal"
+                            data-original-title="test" data-bs-target="#userAdminModal">{{ 'user.admin.add'|trans }}</button>
+                </div>
 
-    <a href="{{ path('app_user_admin_new') }}">Create new</a>
+                <div class="card-body">
+                    <div class="table-responsive table-desi">
+                        <table class="table table-category " id="userDataTable">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">{{ 'table.image'|trans }}</th>
+                                <th class="text-center">{{ 'table.category.name'|trans }}</th>
+                                <th class="text-center">{{ 'table.description'|trans }}</th>
+                                <th class="text-center">{{ 'table.createdAt'|trans }}</th>
+                                <th class="text-center">{{ 'table.updatedAt'|trans }}</th>
+                                <th class="text-center">{{ 'table.enabled.m'|trans }}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="userAdminModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title f-w-600" id="userAdminModalLabel"></h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="needs-validation" id="user_form" novalidate enctype="multipart/form-data">
+                            <input type="hidden" id="user_id" name="user_id" value="">
+                            <div class="form">
+                                <div class="ms-1 form-check form-switch d-block">
+                                    <input class="form-check-input" type="checkbox" name="enabled" role="switch" value="1" id="enabled">
+                                    <label class="form-check-label" for="enabled">{{ 'table.enabled.m'|trans }}</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile_id" class="mb-1">* {{ 'product.category.name'|trans }}</label>
+                                    <select name="profile_id" id="profile_id" class="custom-select form-control" required="">
+                                        <option value="">--{{ 'select'|trans }}--</option>
+                                        {% for profil in profiles %}
+                                            <option value="{{ profil.id }}">{{ profil.description }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{ 'user.profile.error'|trans }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name" class="mb-1">* {{ 'user.first.name'|trans }}</label>
+                                    <input class="form-control" id="first_name" name="first_name" type="text" required>
+                                    <div class="invalid-feedback">
+                                        {{ 'user.first.name.error'|trans }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name" class="mb-1">* {{ 'user.last.name'|trans }}</label>
+                                    <input class="form-control" id="last_name" name="last_name" type="text" required>
+                                    <div class="invalid-feedback">
+                                        {{ 'user.last.name.error'|trans }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="mb-1">* {{ 'user.email'|trans }}</label>
+                                    <input class="form-control" id="email" name="email" type="text" required>
+                                    <div class="invalid-feedback">
+                                        {{ 'user.email.error'|trans }}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="submit_user" type="button" form="user_form">{{ 'save'|trans }}</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

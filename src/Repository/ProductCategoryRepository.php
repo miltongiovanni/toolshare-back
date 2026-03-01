@@ -16,7 +16,7 @@ class ProductCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, ProductCategory::class);
     }
 
-        public function findProductCategories($locale): array
+        public function getProductCategories($locale): array
         {
 
             $qb = $this->getEntityManager()->createQueryBuilder()

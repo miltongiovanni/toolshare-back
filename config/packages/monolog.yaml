@@ -4,7 +4,13 @@ monolog:
 
 when@dev:
     monolog:
+        channels: ['mailer']
         handlers:
+            mailer:
+                type: stream
+                path: "%kernel.logs_dir%/mailer.log"
+                level: debug
+                channels: ['mailer']
             main:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
