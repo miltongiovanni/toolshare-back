@@ -56,19 +56,19 @@ final class UserAdminController extends AbstractController
     }
 
     #[Route('/user/admin/list', name: 'user_admin_list', methods: [ 'POST'])]
-    public function user_admin_list(UserAdminRepository $userAdminRepository): JsonResponse
+    public function user_admin_list(Request $request, UserAdminRepository $userAdminRepository): JsonResponse
     {
-        $productsSubcategories = $userAdminRepository->findAll();
-        //To array
-        $productsSubcategoriesArray = array_map(function ($userAdmin) {
-            /** @var UserAdmin $userAdmin */
-            return $userAdmin->toArray();
-        }, $productsSubcategories);
+        $locale = $request->getLocale();
+        $currentUser = $this->getUser();
+        $users = $userAdminRepository->getAdminUsers($locale);
+        foreach ($users as &$user) {
+            $user['isCurrentAdminUser'] = $currentUser->getId() === $user['id'];
+        }
         $return = [
             'draw' => 0,
-            'recordsTotal' => count($productsSubcategoriesArray),
-            'recordsFiltered' => count($productsSubcategoriesArray),
-            'data' => $productsSubcategoriesArray
+            'recordsTotal' => count($users),
+            'recordsFiltered' => count($users),
+            'data' => $users
         ];
 
         return $this->json($return);
@@ -77,7 +77,7 @@ final class UserAdminController extends AbstractController
     #[Route('/user/admin/get', name: 'user_admin_get', methods: ['POST'])]
     public function user_admin_get(Request $request, UserAdminRepository $userAdminRepository): JsonResponse
     {
-        $user_id = $request->request->get('user_id');
+        $user_id = $request->request->get('adminUser_id');
         $userAdmin = $userAdminRepository->find($user_id);
         return $this->json($userAdmin->toArray());
     }
@@ -92,7 +92,7 @@ final class UserAdminController extends AbstractController
         $first_name = $request->request->get('first_name');
         $last_name = $request->request->get('last_name');
         $email = $request->request->get('email');
-        $enabled = $request->request->get('enabled', false) === '1';
+        $is_active = $request->request->get('is_active', false) === '1';
         $locale = $request->request->get('locale');
         if ($user_id === '0'){
             $userAdmin = new UserAdmin();
@@ -101,58 +101,61 @@ final class UserAdminController extends AbstractController
             $userAdmin->setSlug(Uuid::v7());
         }else{
             $userAdmin = $userAdminRepository->find($user_id);
-            $userAdmin->setupdatedAt(Carbon::now()->toDateTimeImmutable());
         }
         $userAdmin->setFirstName($first_name);
         $userAdmin->setLastName($last_name);
-        $userAdmin->setIsActive($enabled);
+        $userAdmin->setIsActive($is_active);
         $userAdmin->setProfile($profile);
         $userAdmin->setRoles([$profile->getCode()]);
         $userAdmin->setIsVerified(false);
         $em->persist($userAdmin);
         $em->flush();
-        // Generar token seguro
-        try {
-            $resetToken = $resetPasswordHelper->generateResetToken($userAdmin);
 
-        } catch (ResetPasswordExceptionInterface $e) {
-            // If you want to tell the user why a reset email was not sent, uncomment
-            // the lines below and change the redirect to 'app_forgot_password_request'.
-            // Caution: This may reveal if a user is registered or not.
-            //
-            // $this->addFlash('reset_password_error', sprintf(
-            //     '%s - %s',
-            //     $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
-            //     $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-            // ));
+        if ($user_id === '0'){
+            // Generar token seguro
+            try {
+                $resetToken = $resetPasswordHelper->generateResetToken($userAdmin);
 
-            return $this->redirectToRoute('app_check_email');
+            } catch (ResetPasswordExceptionInterface $e) {
+                // If you want to tell the user why a reset email was not sent, uncomment
+                // the lines below and change the redirect to 'app_forgot_password_request'.
+                // Caution: This may reveal if a user is registered or not.
+                //
+                // $this->addFlash('reset_password_error', sprintf(
+                //     '%s - %s',
+                //     $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
+                //     $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
+                // ));
+
+                return $this->redirectToRoute('app_check_email');
+            }
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('contacto@novaquim.com', 'contacto'))
+                ->to(new Address((string) $userAdmin->getEmail(), ($userAdmin->getFirstName().' '.$userAdmin->getLastName())))
+                ->subject('Your password reset request')
+                ->htmlTemplate('email/verify.email.html.twig')
+                ->context([
+                    'resetToken' => $resetToken,
+                    'name' => $userAdmin->getFirstName().' '.$userAdmin->getLastName(),
+                ])
+            ;
+
+            try {
+                $mailer->send($email);
+            } catch (TransportExceptionInterface $e) {
+                dd($e->getMessage());
+            }
+
+            // Store the token object in session for retrieval in check-email route.
+            //$this->setTokenObjectInSession($resetToken);
+
+            $userAdmin->setResetToken($resetToken->getToken());
+
+            $em->persist($userAdmin);
+            $em->flush();
         }
 
-        $email = (new TemplatedEmail())
-            ->from(new Address('contacto@novaquim.com', 'contacto'))
-            ->to(new Address((string) $userAdmin->getEmail(), ($userAdmin->getFirstName().' '.$userAdmin->getLastName())))
-            ->subject('Your password reset request')
-            ->htmlTemplate('email/verify.email.html.twig')
-            ->context([
-                'resetToken' => $resetToken,
-                'name' => $userAdmin->getFirstName().' '.$userAdmin->getLastName(),
-            ])
-        ;
-
-        try {
-            $mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage());
-        }
-
-        // Store the token object in session for retrieval in check-email route.
-        //$this->setTokenObjectInSession($resetToken);
-
-        $userAdmin->setResetToken($resetToken->getToken());
-
-        $em->persist($userAdmin);
-        $em->flush();
 
 
 
@@ -164,22 +167,20 @@ final class UserAdminController extends AbstractController
     public function user_admin_enable(Request $request, UserAdminRepository $userAdminRepository, EntityManagerInterface $em): JsonResponse
     {
 
-        $user_id = $request->request->get('user_id');
+        $user_id = $request->request->get('adminUser_id');
         $userAdmin = $userAdminRepository->find($user_id);
-        $userAdmin->setupdatedAt(Carbon::now()->toDateTimeImmutable());
-        $userAdmin->setEnabled(true);
+        $userAdmin->setIsActive(true);
         $em->persist($userAdmin);
         $em->flush();
         return $this->json(['success' => true]);
     }
-    #[Route('/user/admin/disable', name: 'product_category_disable', methods: [ 'POST'])]
+    #[Route('/user/admin/disable', name: 'user_admin_disable', methods: [ 'POST'])]
     public function user_admin_disable(Request $request, UserAdminRepository $userAdminRepository, EntityManagerInterface $em): JsonResponse
     {
 
-        $user_id = $request->request->get('user_id');
+        $user_id = $request->request->get('adminUser_id');
         $userAdmin = $userAdminRepository->find($user_id);
-        $userAdmin->setupdatedAt(Carbon::now()->toDateTimeImmutable());
-        $userAdmin->setEnabled(false);
+        $userAdmin->setIsActive(false);
         $em->persist($userAdmin);
         $em->flush();
         return $this->json(['success' => true]);

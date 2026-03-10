@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserAdminRepository;
+use Carbon\Carbon;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -248,6 +249,21 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
         $this->last_login = $last_login;
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'profile' => $this->getProfile()->getId(),
+            'slug' => $this->getSlug(),
+            'first_name' => $this->getFirstName(),
+            'last_name' => $this->getLastName(),
+            'created_at' => Carbon::parse($this->getCreatedAt())->toISOString(),
+            'is_active' => $this->isActive(),
+        ];
+
     }
 
 }

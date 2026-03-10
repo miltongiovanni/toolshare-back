@@ -25,11 +25,12 @@
                             <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">{{ 'table.image'|trans }}</th>
-                                <th class="text-center">{{ 'table.category.name'|trans }}</th>
-                                <th class="text-center">{{ 'table.description'|trans }}</th>
+                                <th class="text-center">{{ 'table.first.name'|trans }}</th>
+                                <th class="text-center">{{ 'table.last.name'|trans }}</th>
+                                <th class="text-center">{{ 'table.email'|trans }}</th>
+                                <th class="text-center">{{ 'user.profile'|trans }}</th>
                                 <th class="text-center">{{ 'table.createdAt'|trans }}</th>
-                                <th class="text-center">{{ 'table.updatedAt'|trans }}</th>
+                                <th class="text-center">{{ 'table.last.login'|trans }}</th>
                                 <th class="text-center">{{ 'table.enabled.m'|trans }}</th>
                                 <th></th>
                             </tr>
@@ -62,11 +63,11 @@
                             <input type="hidden" id="user_id" name="user_id" value="">
                             <div class="form">
                                 <div class="ms-1 form-check form-switch d-block">
-                                    <input class="form-check-input" type="checkbox" name="enabled" role="switch" value="1" id="enabled">
-                                    <label class="form-check-label" for="enabled">{{ 'table.enabled.m'|trans }}</label>
+                                    <input class="form-check-input" type="checkbox" name="is_active" role="switch" value="1" id="is_active">
+                                    <label class="form-check-label" for="is_active">{{ 'table.enabled.m'|trans }}</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="profile_id" class="mb-1">* {{ 'product.category.name'|trans }}</label>
+                                    <label for="profile_id" class="mb-1">* {{ 'user.profile'|trans }}</label>
                                     <select name="profile_id" id="profile_id" class="custom-select form-control" required="">
                                         <option value="">--{{ 'select'|trans }}--</option>
                                         {% for profil in profiles %}

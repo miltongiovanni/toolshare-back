@@ -37,6 +37,10 @@ return [
     'table.title' => 'Titre',
     'table.category.name' => 'Catégorie du produit',
     'table.subcategory.name' => 'Sous-catégorie du produit',
+    'table.first.name' => 'Prénom',
+    'table.last.name' => 'Nom',
+    'table.last.login' => 'Dernière connexion',
+    'table.email' => 'Courriel',
 
     //MENU
     'menu.dashboard' => 'Tableau de bord',

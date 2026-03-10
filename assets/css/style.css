@@ -4749,7 +4749,7 @@ th {
 .table th {
     color: #313131;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .table td {
@@ -4757,7 +4757,7 @@ th {
 }
 
 .table td a i {
-    font-size: 18px;
+    font-size: 16px;
     color: #707070;
 }
 

@@ -14,7 +14,7 @@ let language = locale === 'en' ? languageEn : (locale === 'fr' ? languageFr : la
 
 let userDataTable = new DataTable("#userDataTable", {
     ajax: {
-        url: '/product/subcategory/list',
+        url: '/user/admin/list',
         type: "POST",
         dataType: "json"
     }, columns: [
@@ -23,34 +23,39 @@ let userDataTable = new DataTable("#userDataTable", {
             width: '5%',
         },
         {
-            data: 'category',
-            width: '20%',
+            data: 'first_name',
+            width: '15%',
 
         },
         {
-            data: 'name',
-            width: '20%',
+            data: 'last_name',
+            width: '15%',
+
+        },
+        {
+            data: 'email',
+            width: '25%',
         },
         {
             data: 'description',
-            width: '20%',
+            width: '15%',
         },
         {
             data: 'created_at',
             width: '10%',
             render: function (data, type, row) {
-                return DateTime.fromISO(data).setLocale(locale).toISODate();
+                return DateTime.fromISO(data).setLocale(locale).toLocaleString(DateTime.DATETIME_MED);
             }
         },
         {
-            data: 'updated_at',
+            data: 'last_login',
             width: '10%',
             render: function (data, type, row) {
-                return DateTime.fromISO(data).setLocale(locale).toISODate();
+                return DateTime.fromISO(data).setLocale(locale).toLocaleString(DateTime.DATETIME_MED);
             }
         },
         {
-            data: 'enabled',
+            data: 'is_active',
             width: '5%',
             render: function (data, type, row) {
                 return data === true ? '<i class="bi bi-check-circle-fill text-success fs-4"></i>' : '<i class="bi bi-x-circle-fill text-danger fs-4"></i>';
@@ -60,21 +65,25 @@ let userDataTable = new DataTable("#userDataTable", {
             data: 'null',
             width: '10%',
             render: function (data, type, row) {
-                let actionTitle = row.enabled ? t('disable') : t('enable');
-                let actionClass = row.enabled ? 'subcategory-enabled' : 'subcategory-disabled';
-                return '<div class="dropdown">\n' +
-                    '    <button type="button" class="btn btn-primary dropdown-toggle w-100" role="button" id="dropdownMenuLink"\n' +
-                    '       data-bs-toggle="dropdown" aria-expanded="false">\n' + t('actions') +
-                    '    </button>\n' +
-                    '    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n' +
-                    '        <li class="w-100">\n' +
-                    '            <button data-subcategory-id="' + row.id + '"  type="button" class="dropdown-item ' + actionClass + '" >' + actionTitle + '</button>\n' +
-                    '        </li>\n' +
-                    '        <li class="w-100">\n' +
-                    '            <button data-subcategory-id="' + row.id + '"  type="button" class="dropdown-item subcategory-edit" >' + t('edit') + '</button>\n' +
-                    '        </li>\n' +
-                    '    </ul>\n' +
-                    '</div>'
+                let actionTitle = row.is_active ? t('disable') : t('enable');
+                let actionClass = row.is_active ? 'adminUser-enabled' : 'adminUser-disabled';
+                let response = '';
+                if (!row.isCurrentAdminUser){
+                    response = '<div class="dropdown">\n' +
+                        '    <button type="button" class="btn btn-primary dropdown-toggle w-100" role="button" id="dropdownMenuLink"\n' +
+                        '       data-bs-toggle="dropdown" aria-expanded="false">\n' + t('actions') +
+                        '    </button>\n' +
+                        '    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n' +
+                        '        <li class="w-100">\n' +
+                        '            <button data-adminUser-id="' + row.id + '"  type="button" class="dropdown-item ' + actionClass + '" >' + actionTitle + '</button>\n' +
+                        '        </li>\n' +
+                        '        <li class="w-100">\n' +
+                        '            <button data-adminUser-id="' + row.id + '"  type="button" class="dropdown-item adminUser-edit" >' + t('edit') + '</button>\n' +
+                        '        </li>\n' +
+                        '    </ul>\n' +
+                        '</div>';
+                }
+                return response;
             }
         }
     ],
@@ -153,13 +162,13 @@ userAdminModalEl.addEventListener('hidden.bs.modal', event => {
 
 })
 
-$(document).on('click', '.subcategory-enabled', function () {
-    let subcategory_id = $(this).data('subcategoryId');
+$(document).on('click', '.adminUser-enabled', function () {
+    let adminUser_id = $(this).data('adminuserId');
     $.ajax({
-        url: 'user/admin/disable', // Use the form's action attribute
+        url: '/user/admin/disable', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            subcategory_id: subcategory_id,
+            adminUser_id: adminUser_id,
         },
         dataType: "json",
         success: function (response) {
@@ -177,13 +186,13 @@ $(document).on('click', '.subcategory-enabled', function () {
 });
 
 
-$(document).on('click', '.subcategory-disabled', function () {
-    let subcategory_id = $(this).data('subcategoryId');
+$(document).on('click', '.adminUser-disabled', function () {
+    let adminUser_id = $(this).data('adminuserId');
     $.ajax({
         url: '/user/admin/enable', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            subcategory_id: subcategory_id,
+            adminUser_id: adminUser_id,
         },
         dataType: "json",
         success: function (response) {
@@ -199,29 +208,24 @@ $(document).on('click', '.subcategory-disabled', function () {
         }
     });
 });
-$(document).on('click', '.subcategory-edit', function () {
-    let subcategory_id = $(this).data('subcategoryId');
+$(document).on('click', '.adminUser-edit', function () {
+    let adminUser_id = $(this).data('adminuserId');
     $.ajax({
         url: '/user/admin/get', // Use the form's action attribute
         type: 'post', // Use the form's method attribute
         data: {
-            subcategory_id: subcategory_id,
+            adminUser_id: adminUser_id,
         },
         dataType: "json",
         success: function (response) {
             // Handle a successful response from the server
-            $('#enabled').prop('checked', response.enabled);
-
-            $('#name_en').val(response.name_en);
-            $('#name_fr').val(response.name_fr);
-            $('#name_es').val(response.name_es);
-            $('#description_en').val(response.description_en);
-            $('#description_fr').val(response.description_fr);
-            $('#description_es').val(response.description_es);
-
+            $('#is_active').prop('checked', response.is_active);
+            $('#user_id').val(response.id)
+            $('#first_name').val(response.first_name);
+            $('#last_name').val(response.last_name);
+            $('#email').val(response.email);
+            $('#profile_id').val(response.profile);
             $('#userAdminModalLabel').html(t('user.admin.edit'));
-            $('#subcategory_id').val(subcategory_id);
-            $('#product_category_id').val(response.category_id);
             userAdminModal.show();
         },
         error: function (xhr, status, error) {

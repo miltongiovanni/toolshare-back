@@ -32,7 +32,22 @@ class UserAdminRepository extends ServiceEntityRepository implements PasswordUpg
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    public function getAdminUsers($locale): array
+    {
 
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('u.id', 'u.email', 'u.first_name', 'u.last_name', 't.description', 'u.created_at', 'u.is_active', 'u.last_login')
+            ->from(UserAdmin::class, 'u')
+            ->join('u.profile', 'p')
+            ->join('p.translations', 't')
+            ->andWhere('t.locale = :locale')
+            ->setParameter('locale', $locale)
+            ->orderBy('u.first_name', 'ASC');
+        return $qb
+            ->getQuery()
+            ->getResult();
+
+    }
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

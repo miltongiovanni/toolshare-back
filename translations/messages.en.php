@@ -37,6 +37,10 @@ return [
     'table.title' => 'Title',
     'table.category.name' => 'Product Category',
     'table.subcategory.name' => 'Product Subcategory',
+    'table.first.name' => 'First Name',
+    'table.last.name' => 'Last Name',
+    'table.last.login' => 'Last login',
+    'table.email' => 'Email',
 
     //MENU
     'menu.dashboard' => 'Dashboard',
