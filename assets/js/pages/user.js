@@ -51,7 +51,7 @@ let userDataTable = new DataTable("#userDataTable", {
             data: 'last_login',
             width: '10%',
             render: function (data, type, row) {
-                return DateTime.fromISO(data).setLocale(locale).toLocaleString(DateTime.DATETIME_MED);
+                return data != null ? DateTime.fromISO(data).setLocale(locale).toLocaleString(DateTime.DATETIME_MED) : '';
             }
         },
         {

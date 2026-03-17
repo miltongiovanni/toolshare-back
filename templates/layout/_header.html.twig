@@ -109,8 +109,9 @@
                 </li>
                 <li class="onhover-dropdown">
                     <div class="media align-items-center">
-                        <img class="align-self-center pull-right img-50 blur-up lazyloaded"
-                             src="{{ asset('images/dashboard/user3.jpg') }}" alt="header-user">
+                        {#<img class="align-self-center pull-right img-50 blur-up lazyloaded"
+                             src="{{ asset('images/dashboard/user3.jpg') }}" alt="header-user">#}
+                        <div class="avatar">{{ (app.user.getFirstName|first |upper)~(app.user.getLastName|first |upper) }}</div>
                         <div class="dotted-animation">
                             <span class="animate-circle"></span>
                             <span class="main-circle"></span>
@@ -118,13 +119,8 @@
                     </div>
                     <ul class="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
                         <li>
-                            <a href="javascript:void(0)">
-                                <i data-feather="user"></i>Edit Profile
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)">
-                                <i data-feather="settings"></i>Settings
+                            <a href="{{ path('change_password') }}">
+                                <i data-feather="key"></i>{{ 'menu.password'|trans }}
                             </a>
                         </li>
                         <li>

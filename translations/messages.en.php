@@ -8,6 +8,21 @@ return [
     'auth.remember_me' => 'Remember me',
     'auth.forgot_password' => 'Forgot password',
     'auth.login' => 'Login',
+    'auth.password.change' => 'Change password',
+    'auth.password.reset' => 'Reset password',
+    'auth.password.forgot' => 'Forgot password',
+    'auth.password.new' => 'New password',
+    'auth.password.new.error' => 'New password must be different from old password',
+    'auth.password.confirm' => 'Confirm password',
+    'auth.password.old' => 'Old password',
+    'auth.password.old.error' => 'The old password is not correct.',
+    'auth.password.validation' => 'Password must contain the following:',
+    'auth.password.lowercase' => 'A <b>lowercase</b> letter',
+    'auth.password.uppercase' => 'A <b>capital (uppercase)</b> letter',
+    'auth.password.number' => 'A <b>number</b>',
+    'auth.password.special' => 'A <b>special character</b>',
+    'auth.password.length' => 'Minimum <b>8 characters</b>',
+    'auth.password.no_match' => 'Passwords do not match',
 
     //GLOBAL
     'site.name' => 'Toolshare Admin panel',
@@ -53,6 +68,7 @@ return [
     'menu.users' => 'Users',
     'menu.admin.users' => 'Admin Users',
     'menu.profile' => 'Profile',
+    'menu.password' => 'Change password',
 
     //PRODUCT
 

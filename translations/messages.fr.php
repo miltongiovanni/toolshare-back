@@ -8,6 +8,21 @@ return [
     'auth.remember_me' => 'Se souvenir de moi',
     'auth.forgot_password' => 'Mot de passe oublié',
     'auth.login' => 'Se connecter',
+    'auth.password.change' => 'Changer le mot de passe',
+    'auth.password.reset' => 'Réinitialiser le mot de passe',
+    'auth.password.forgot' => 'Mot de passe oublié',
+    'auth.password.new' => 'Nouveau mot de passe',
+    'auth.password.new.error' => 'Le nouveau mot de passe doit être différent de l’ancien',
+    'auth.password.confirm' => 'Confirmer le mot de passe',
+    'auth.password.old' => 'Ancien mot de passe',
+    'auth.password.old.error' => 'L’ancien mot de passe n’est pas correct.',
+    'auth.password.validation' => 'Le mot de passe doit contenir ce qui suit :',
+    'auth.password.lowercase' => 'Une lettre <b>minuscule</b>',
+    'auth.password.uppercase' => 'Une lettre <b>majuscule</b>',
+    'auth.password.number' => 'Un <b>numéro</b>',
+    'auth.password.special' => 'Un <b>caractère spécial</b>',
+    'auth.password.length' => 'Minimum <b>8 caractères</b>',
+    'auth.password.no_match' => 'Les mots de passe ne correspondent pas',
 
     //GLOBAL
     'site.name' => 'Panneau d’administration Toolshare',
@@ -53,6 +68,7 @@ return [
     'menu.users' => 'Utilisateurs',
     'menu.admin.users' => 'Utilisateurs admin',
     'menu.profile' => 'Profil',
+    'menu.password' => 'Modifier le mot de passe',
 
     //PRODUCT
 

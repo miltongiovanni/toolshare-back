@@ -8,6 +8,21 @@ return [
     'auth.remember_me' => 'Recordarme',
     'auth.forgot_password' => 'Olvidé mi contraseña',
     'auth.login' => 'Inicio de sesión',
+    'auth.password.change' => 'Cambiar la contraseña',
+    'auth.password.reset' => 'Restablecer contraseña',
+    'auth.password.forgot' => 'Olvidé mi contraseña',
+    'auth.password.new' => 'Nueva contraseña',
+    'auth.password.new.error' => 'La nueva contraseña debe ser diferente de la antigua',
+    'auth.password.confirm' => 'Confirmar contraseña',
+    'auth.password.old' => 'Contraseña antigua',
+    'auth.password.old.error' => 'La contraseña antigua no es correcta.',
+    'auth.password.validation' => 'La contraseña debe contener lo siguiente :',
+    'auth.password.lowercase' => 'Una letra <b>minúscula</b>',
+    'auth.password.uppercase' => 'Una letra <b>mayúscula</b>',
+    'auth.password.number' => 'Un <b>número</b>',
+    'auth.password.special' => 'Un <b>carácter especial</b>',
+    'auth.password.length' => 'Mínimo  <b>8 caracteres</b>',
+    'auth.password.no_match' => 'Las contraseñas no corresponden',
 
     //GLOBAL
     'site.name' => 'Panel de administración de Toolshare',
@@ -53,6 +68,7 @@ return [
     'menu.users' => 'Usuarios',
     'menu.admin.users' => 'Usuarios Admin',
     'menu.profile' => 'Perfil',
+    'menu.password' => 'Cambiar contraseña',
 
     //PRODUCT
 

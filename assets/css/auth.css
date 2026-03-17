@@ -1,0 +1,49 @@
+.input-group-text {
+    padding: .375rem 0.1rem;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+    display:none;
+    background: #f1f1f1;
+    color: #000 !important;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+    text-align: left !important;
+}
+
+#message p {
+    padding: 0 0 0 10px;
+    font-size: 14px !important;
+    margin-bottom: 0;
+}
+#message h4 {
+    padding: 10px 0;
+    font-weight: 600;
+    font-size: 16px !important;
+    text-transform: unset !important;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green !important;
+}
+
+.valid:before {
+    position: relative;
+    left: -10px;
+    content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+    color: red !important;
+}
+
+.invalid:before {
+    position: relative;
+    left: -10px;
+    content: "✖";
+}
+
