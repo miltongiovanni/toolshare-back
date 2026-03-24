@@ -47,7 +47,7 @@ final class UserAdminController extends AbstractController
         $this->breadcrumbService->add($this->translator->trans('menu.dashboard'), $this->generateUrl('home'));
         $this->breadcrumbService->add($this->translator->trans('menu.admin.users'), $this->generateUrl('user_admin_index'));
         $breadcrumbs = $this->breadcrumbService->all();
-        $profiles = $profileRepository->getAllProfiles($locale);
+        $profiles = $profileRepository->getAllProfilesActives($locale);
         return $this->render('user_admin/index.html.twig', [
             'profiles' => $profiles,
             'breadcrumbs' => $breadcrumbs,

@@ -5,49 +5,136 @@
     {{ parent() }}
 {% endblock %}
 {% block javascripts %}
-    {% block importmap %}{{ importmap(['app', 'sidebar-menu' ]) }}{% endblock %}
+    {{ parent() }}
+    {% block importmap %}{{ importmap(['app', 'sidebar-menu', 'profile' ]) }}{% endblock %}
 {% endblock %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header justify-content-end">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>{{ 'table.role'|trans }}</th>
-                <th>Slug</th>
-                <th>{{ 'table.description'|trans }}</th>
-                <th>{{ 'table.createdAt'|trans }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for profile in profiles %}
-            <tr>
-                <td>{{ profile.id }}</td>
-                <td>{{ profile.code }}</td>
-                <td>{{ profile.slug }}</td>
-                <td>{{ profile.description }}</td>
-                <td>{{ profile.created_at ? profile.created_at|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Action
-                        </button>
-                        <ul class="dropdown-menu">
-                            {#<a class="dropdown-item" href="{{ path('profile_show', {'id': profile.id}) }}">show</a>#}
-                            <a class="dropdown-item" href="{{ path('profile_edit', {'id': profile.id}) }}">edit</a>
-                        </ul>
+                    <button type="button" class="btn btn-primary mt-md-0 mt-2" id="add_profile_button" data-bs-toggle="modal"
+                            data-original-title="test" data-bs-target="#profileModal">{{ 'profile.add'|trans }}</button>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive table-desi">
+                        <table class="table" id="profileDataTable">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>{{ 'table.role'|trans }}</th>
+                                <th>Slug</th>
+                                <th>{{ 'table.description'|trans }}</th>
+                                <th>{{ 'table.createdAt'|trans }}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                        </table>
                     </div>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <a href="{{ path('profile_new') }}">Create new</a>
+{% endblock %}
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="profileModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title f-w-600" id="profileModalLabel"></h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="needs-validation" id="profile_form" novalidate enctype="multipart/form-data">
+                            <input type="hidden" id="profile_id" name="profile_id" value="">
+                            <div class="form">
+                                <div class="ms-1 form-check form-switch d-block">
+                                    <input class="form-check-input" type="checkbox" name="enabled" role="switch" value="1" id="enabled">
+                                    <label class="form-check-label" for="enabled">{{ 'table.enabled.m'|trans }}</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="code" class="mb-1">* {{ 'profile.code'|trans }}</label>
+                                    <input class="form-control" id="code" name="code" type="text" required readonly>
+                                    <div class="invalid-feedback">
+                                        {{ 'profile.code.error'|trans }}
+                                    </div>
+                                </div>
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="english-tab" data-bs-toggle="tab" data-bs-target="#english" type="button" role="tab" aria-controls="english"
+                                                aria-selected="true">
+                                            {{ 'english'|trans }}</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="french-tab" data-bs-toggle="tab" data-bs-target="#french" type="button" role="tab" aria-controls="french"
+                                                aria-selected="true">{{ 'french'|trans }}</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="spanish-tab" data-bs-toggle="tab" data-bs-target="#spanish" type="button" role="tab" aria-controls="spanish"
+                                                aria-selected="true">{{ 'spanish'|trans }}</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content mt-3" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="english" role="tabpanel" aria-labelledby="english-tab">
+                                        <div class="form-group">
+                                            <label for="description_en" class="mb-1">* {{ 'profile.description'|trans }}</label>
+                                            <input class="form-control" id="description_en" name="description_en" type="text" required>
+                                            <div class="invalid-feedback">
+                                                {{ 'profile.description.error'|trans }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="slug_en" class="mb-1">{{ 'profile.slug'|trans }}</label>
+                                            <input class="form-control" id="slug_en" name="slug_en" type="text" required readonly>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="french" role="tabpanel" aria-labelledby="french-tab">
+                                        <div class="form-group">
+                                            <label for="description_fr" class="mb-1">* {{ 'profile.description'|trans }}</label>
+                                            <input class="form-control" id="description_fr" name="description_fr" type="text" required>
+                                            <div class="invalid-feedback">
+                                                {{ 'profile.description.error'|trans }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="slug_fr" class="mb-1">{{ 'profile.slug'|trans }}</label>
+                                            <input class="form-control" id="slug_fr" name="slug_fr" type="text" required readonly>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="spanish" role="tabpanel" aria-labelledby="spanish-tab">
+                                        <div class="form-group">
+                                            <label for="description_es" class="mb-1">* {{ 'profile.description'|trans }}</label>
+                                            <input class="form-control" id="description_es" name="description_es" type="text" required>
+                                            <div class="invalid-feedback">
+                                                {{ 'profile.description.error'|trans }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="slug_es" class="mb-1">{{ 'profile.slug'|trans }}</label>
+                                            <input class="form-control" id="slug_es" name="slug_es" type="text" required readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="submit_profile" type="button" form="profile_form">{{ 'save'|trans }}</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">{{ 'close'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

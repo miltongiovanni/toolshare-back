@@ -147,7 +147,7 @@ class ProductCategory implements TranslatableInterface
 
         return $this;
     }
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => $this->getId(),

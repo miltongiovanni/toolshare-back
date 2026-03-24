@@ -99,5 +99,15 @@ return [
     'user.admin.add' => 'Ajouter usager',
     'user.admin.edit' => 'Éditer usager',
 
+    //PROFILE
+
+    'profile.code' => 'Rôle du profil:',
+    'profile.code.error' => 'Veuillez entrer le rôle du profil',
+    'profile.slug' => 'Slug:',
+    'profile.slug.error' => 'Veuillez entrer le slug du profil',
+    'profile.description' => 'Description du profil :',
+    'profile.add' => 'Ajouter Profil',
+    'profile.edit' => 'Éditer Profil',
+
 
 ];

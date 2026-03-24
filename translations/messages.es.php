@@ -98,4 +98,14 @@ return [
     'user.admin.image' => 'Product Category Image:',
     'user.admin.add' => 'Agregar usuario',
     'user.admin.edit' => 'Editar usuario',
+
+    //PROFILE
+
+    'profile.code' => 'Rol:',
+    'profile.code.error' => 'Por favor, ingrese el rol del perfil',
+    'profile.slug' => 'Slug:',
+    'profile.slug.error' => 'Por favor, ingrese el slug del perfil',
+    'profile.description' => 'Descripción del perfil:',
+    'profile.add' => 'Agregar perfil',
+    'profile.edit' => 'Editar perfil',
 ];

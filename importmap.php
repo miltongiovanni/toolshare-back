@@ -52,6 +52,10 @@ return [
         'path' => './assets/js/pages/user.js',
         'entrypoint' => true,
     ],
+    'profile' => [
+        'path' => './assets/js/pages/profile.js',
+        'entrypoint' => true,
+    ],
     'jquery' => [
         'version' => '3.7.1',
     ],

@@ -34,7 +34,20 @@ class ProfileRepository extends ServiceEntityRepository
         public function getAllProfiles($locale): array
         {
             $qb = $this->getEntityManager()->createQueryBuilder()
-                ->select('p.id', 'p.code', 't.slug', 't.description', 'p.created_at', 'p.updated_at')
+                ->select('p.id', 'p.code', 't.slug', 't.description', 'p.created_at', 'p.updated_at', 'p.enabled')
+                ->from(Profile::class, 'p')
+                ->join('p.translations', 't')
+                ->andWhere('t.locale = :locale')
+                ->setParameter('locale', $locale)
+                ->orderBy('t.description', 'ASC');
+            return $qb
+                ->getQuery()
+                ->getResult();
+        }
+        public function getAllProfilesActives($locale): array
+        {
+            $qb = $this->getEntityManager()->createQueryBuilder()
+                ->select('p.id', 'p.code', 't.slug', 't.description', 'p.created_at', 'p.updated_at', 'p.enabled')
                 ->from(Profile::class, 'p')
                 ->join('p.translations', 't')
                 ->andWhere('t.locale = :locale')

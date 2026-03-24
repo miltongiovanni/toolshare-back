@@ -99,4 +99,14 @@ return [
     'user.admin.image' => 'Product Category Image:',
     'user.admin.add' => 'Add User',
     'user.admin.edit' => 'Edit User',
+
+    //PROFILE
+
+    'profile.code' => 'Profile role:',
+    'profile.code.error' => 'Please enter profile role',
+    'profile.slug' => 'Slug:',
+    'profile.slug.error' => 'Please enter profile slug',
+    'profile.description' => 'Profile description:',
+    'profile.add' => 'Add Profile',
+    'profile.edit' => 'Edit Profile',
 ];

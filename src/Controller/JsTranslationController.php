@@ -23,6 +23,8 @@ class JsTranslationController
             'product.subcategory.edit' => $translator->trans('product.subcategory.edit'),
             'user.admin.add' => $translator->trans('user.admin.add'),
             'user.admin.edit' => $translator->trans('user.admin.edit'),
+            'profile.add' => $translator->trans('profile.add'),
+            'profile.edit' => $translator->trans('profile.edit'),
         ];
 
         return new JsonResponse($messages);
