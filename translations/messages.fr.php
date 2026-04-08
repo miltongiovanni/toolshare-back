@@ -3,6 +3,7 @@
 return [
     'auth.welcome' => 'Bienvenue à Toolshare',
     'auth.sign_in' => 'Connectez-vous',
+    'auth.social' => 'Connectez-vous avec les plateformes sociales',
     'auth.email' => 'Courriel',
     'auth.password' => 'Mot de passe',
     'auth.remember_me' => 'Se souvenir de moi',

@@ -13,6 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class HomeController extends AbstractController
 {
     private $breadcrumbService;
+    private $translator;
     public function __construct(BreadcrumbService $breadcrumbService, TranslatorInterface $translator)
     {
         $this->breadcrumbService = $breadcrumbService;

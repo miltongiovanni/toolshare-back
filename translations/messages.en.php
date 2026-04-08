@@ -3,6 +3,7 @@
 return [
     'auth.welcome' => 'Welcome to Toolshare',
     'auth.sign_in' => 'Sign in',
+    'auth.social' => 'Login up with social platforms',
     'auth.email' => 'Email',
     'auth.password' => 'Password',
     'auth.remember_me' => 'Remember me',

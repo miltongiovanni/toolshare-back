@@ -62,6 +62,12 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $last_login = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebookId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -264,6 +270,30 @@ class UserAdmin implements UserInterface, PasswordAuthenticatedUserInterface
             'is_active' => $this->isActive(),
         ];
 
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+        $this->googleId = $googleId;
+
+        return $this;
+    }
+
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId(?string $facebookId): static
+    {
+        $this->facebookId = $facebookId;
+
+        return $this;
     }
 
 }

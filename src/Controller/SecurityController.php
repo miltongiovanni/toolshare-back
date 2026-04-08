@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,4 +112,24 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
+
+    #[Route('/connect/google', name: 'connect_google_start')]
+    public function google(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry->getClient('google')
+            ->redirect(['email', 'profile']);
+    }
+
+    #[Route('/connect/google/check', name: 'connect_google_check')]
+    public function googleCheck() {}
+
+    #[Route('/connect/facebook', name: 'connect_facebook_start')]
+    public function facebook(ClientRegistry $clientRegistry)
+    {
+        return $clientRegistry->getClient('facebook')
+            ->redirect(['email']);
+    }
+
+    #[Route('/connect/facebook/check', name: 'connect_facebook_check')]
+    public function facebookCheck() {}
 }

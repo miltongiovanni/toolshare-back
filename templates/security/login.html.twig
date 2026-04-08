@@ -56,13 +56,11 @@
                     </div>
                 </div>
                 <div class="form-footer">
-                    {# <span>Or Login up with social platforms</span>
+                     <span>{{ 'auth.social'|trans }}</span>
                             <ul class="social">
-                                <li><a class="ti-facebook" href=""></a></li>
-                                <li><a class="ti-twitter" href=""></a></li>
-                                <li><a class="ti-instagram" href=""></a></li>
-                                <li><a class="ti-pinterest" href=""></a></li>
-                            </ul> #}
+                                <li><a class="ti-facebook" href="{{ path('connect_facebook_start') }}"></a></li>
+                                <li><a class="ti-google" href=""></a></li>
+                            </ul>
                 </div>
             </form>
         </div>
