@@ -3,9 +3,12 @@
 namespace App\Security;
 
 use App\Entity\UserAdmin;
+use App\Repository\ProfileRepository;
 use App\Repository\UserAdminRepository;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +21,7 @@ use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @see https://symfony.com/doc/current/security/custom_authenticator.html
@@ -27,7 +31,9 @@ class OAuthAuthenticator extends AbstractAuthenticator
     public function __construct(
         private ClientRegistry $clientRegistry,
         private UserAdminRepository $userAdminRepository,
+        private ProfileRepository $profileRepository,
         private EntityManagerInterface $em,
+        private Security $security,
         private UrlGeneratorInterface $urlGenerator
     ) {}
     /**
@@ -55,22 +61,30 @@ class OAuthAuthenticator extends AbstractAuthenticator
 
         $client = $this->clientRegistry->getClient($provider);
         $oauthUser = $client->fetchUser();
-
+        $firstName = $oauthUser->getFirstName();
+        $lastName = $oauthUser->getLastName();
         $email = $oauthUser->getEmail();
         $oauthId = $oauthUser->getId();
 
         return new SelfValidatingPassport(
-            new UserBadge($email ?? $oauthId, function () use ($email, $oauthId, $provider) {
+            new UserBadge($email, function () use ($email, $oauthId, $provider, $firstName, $lastName) {
 
                 // 1. Buscar por email
-                $user = $email
-                    ? $this->userAdminRepository->findOneBy(['email' => $email])
-                    : null;
+                $user =  $this->userAdminRepository->findOneBy(['email' => $email]);
 
                 // 2. Si no existe → crear
                 if (!$user) {
                     $user = new UserAdmin();
                     $user->setEmail($email);
+                    $user->setFirstName($firstName);
+                    $user->setLastName($lastName);
+                    $user->setIsVerified(true);
+                    $user->setCreatedAt(Carbon::now()->toDateTimeImmutable());
+                    $user->setSlug(Uuid::v7());
+                    $user->setIsActive(true);
+                    $profile = $this->profileRepository->findOneBy(['id' => 2]);
+                    $user->setProfile($profile);
+                    $user->setRoles([$profile->getCode()]);
                 }
 
                 // 3. Vincular provider

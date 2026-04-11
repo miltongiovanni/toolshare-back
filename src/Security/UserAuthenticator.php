@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\UserAdmin;
 use App\Repository\UserAdminRepository;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
@@ -75,7 +76,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
                 if (!$user->getPassword()) {
                     throw new CustomUserMessageAuthenticationException(
-                        'Debes crear tu contraseña desde el enlace enviado por correo.'
+                        'Debes iniciar sesión utilizando Google o Facebook, o crear una contraseña.'
                     );
                 }
 
@@ -87,10 +88,6 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): RedirectResponse
     {
-        $user = $this->security->getUser();
-        $user->setLastLogin(Carbon::now()->toDateTimeImmutable());
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
